@@ -22,17 +22,40 @@ export class StudentService {
     }
 
     public async updateStudent(s:Partial<Student>){
-        console.log(s);
+        // console.log(s);
         const student = await this.studentRepository.findOne({
             where:{
                 id:s.id
             }
         })
-        console.log(student);
+        // console.log(student);
         student.name = s.name;
         student.subject = s.subject;
         student.gender = s.gender;
         //this.studentRepository.update({where:{id:s.id}},{name:s.name,subject:s.subject,gender:s.gender})
         return this.studentRepository.save(student)
+    }
+
+    public async deleteStudent(s:Partial<Student>){
+        const student = await this.studentRepository.findOne({
+            where:{
+                id:s.id
+            }
+        })
+        this.studentRepository.delete(student);
+    }
+
+    public async getAllStudents(){
+        const students = await this.studentRepository.find({});
+        return students;
+    }
+
+    public async getStudentById(s:Partial<Student>){
+        const student = await this.studentRepository.findOne({
+            where:{
+                id:s.id
+            }
+        })
+        return student;
     }
 }
