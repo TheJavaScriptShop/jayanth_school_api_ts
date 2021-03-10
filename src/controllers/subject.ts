@@ -5,8 +5,8 @@ export default class SubjectControllers{
     public static async createNewSubject(ctx:Context){
         const subjectservice = new SubjectService()
         try {
-            const {name , student} = ctx.request.body
-            const subject = await subjectservice.create({name , student});
+            const {name , student,teacher} = ctx.request.body
+            const subject = await subjectservice.create({name , student},teacher);
             ctx.body = subject;
         } catch (error) {
             console.log(error)
@@ -36,8 +36,8 @@ export default class SubjectControllers{
     public static async updateSubject(ctx:Context){
         const subjectservice = new SubjectService()
         try {
-            const {id , name ,student} = ctx.request.body
-            const updatedSubject = await subjectservice.updateSubject({id,name,student})
+            const {id , name ,student,teacher} = ctx.request.body
+            const updatedSubject = await subjectservice.updateSubject({id,name,student,teacher})
             ctx.body= updatedSubject
         } catch (error) {
             console.log(error)
