@@ -1,4 +1,4 @@
-import { getManager, Repository } from 'typeorm'
+import {getManager, Repository } from 'typeorm'
 import {Student} from '../entities/student'
 
 export enum Gender{
@@ -18,7 +18,7 @@ export class StudentService {
             subject:s.subject,
             gender:s.gender
         })
-        return this.studentRepository.save(student)
+        return this.studentRepository.save(student); 
     }
 
     public async updateStudent(s:Partial<Student>){
@@ -46,7 +46,8 @@ export class StudentService {
     }
 
     public async getAllStudents(){
-        const students = await this.studentRepository.find({});
+        const students = await this.studentRepository.find({ relations: ["subject"] });
+        console.log(students);
         return students;
     }
 
@@ -54,7 +55,8 @@ export class StudentService {
         const student = await this.studentRepository.findOne({
             where:{
                 id:s.id
-            }
+            },
+            relations:["subject"]
         })
         return student;
     }
