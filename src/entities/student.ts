@@ -1,4 +1,4 @@
-import {Entity,Column,PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable} from 'typeorm'
+import {Entity,Column,PrimaryGeneratedColumn, ManyToMany, JoinTable} from 'typeorm'
 import {IsEnum} from 'class-validator'
 import { Subject } from './subject'
 
