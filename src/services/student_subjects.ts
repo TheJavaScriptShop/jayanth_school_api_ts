@@ -24,7 +24,7 @@ export class StudentSubjectService{
                 id:subjectId
             }
         })
-        student.subject = [subject, ...student.subject]
+        student.subject = [subject , ...student.subject]
         return this.studentrepository.save(student);
     }
 
