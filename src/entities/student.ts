@@ -1,5 +1,6 @@
-import {Entity,Column,PrimaryGeneratedColumn} from 'typeorm'
+import {Entity,Column,PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable} from 'typeorm'
 import {IsEnum} from 'class-validator'
+import { Subject } from './subject'
 
 export enum Gender{
     'male',
@@ -15,8 +16,9 @@ export class Student{
     @Column()
     name:string
 
-    @Column()
-    subject:string
+    @ManyToMany(()=>Subject ,(subject)=>subject)
+    @JoinTable({name: 'student_subject'})
+    subject:Subject[]
 
     @IsEnum(Gender)
     @Column()
