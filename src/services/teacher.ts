@@ -22,13 +22,15 @@ export class TeacherService{
         const teacher = await this.teacherrepository.findOne({
             where:{
                 id:teacherId
-            }
+            },
+            relations:['subject']
+
         })
         return teacher;
     }
 
     public async getAllTeachers(){
-        const teachers = await this.teacherrepository.find()
+        const teachers = await this.teacherrepository.find({relations:['subject']})
         return teachers
     }
 

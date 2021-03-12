@@ -11,6 +11,6 @@ export class Teacher{
     @Column()
     gender:string
 
-    @OneToMany(()=> Subject, (subject)=>subject, {onDelete:'CASCADE' ,onUpdate:'CASCADE'})
+    @OneToMany(()=> Subject, (subject)=>subject.teacher, {onDelete:'CASCADE' ,onUpdate:'CASCADE'})
     subject:Subject
 }
