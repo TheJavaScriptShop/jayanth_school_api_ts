@@ -13,6 +13,6 @@ export class Subject{
     @JoinTable({name: 'student_subject'})
     student:Student[]
 
-    @ManyToOne(()=>Teacher , (teacher)=>teacher.subject,{onUpdate:'CASCADE',onDelete:'CASCADE'})
+    @ManyToOne(()=>Teacher , (teacher)=>teacher.subject,{onUpdate:'CASCADE', nullable: true})
     teacher:Teacher
 }

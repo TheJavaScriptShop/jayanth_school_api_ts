@@ -1,15 +1,19 @@
 import { Context } from 'koa';
-import { studentRouter } from 'src/routes/student';
-import {StudentService} from '../services/student'
+import {StudentService} from '../services/student';
+
 
 export default class StudentController{
     public static async createNewStudent(ctx:Context){
         const studentservice = new StudentService();
         try {
             const {name, subject, gender } = ctx.request.body;
-
-            const student = await studentservice.createStudent({name, subject, gender})
-            ctx.body = student;
+            ctx.checkBody(name).len(2, 20, "Name is invalid");
+            if (ctx.errors) {
+                ctx.body = ctx.errors;
+            } else {
+                const student = await studentservice.createStudent({name, subject, gender})
+                ctx.body = student;
+            }
         } catch (error) {
             console.log(error)
         }
@@ -19,7 +23,7 @@ export default class StudentController{
         const studentservice = new StudentService();
         try {
             const {id, name, subject, gender } = ctx.request.body;
-
+            ctx
             const updatedStudent = await studentservice.updateStudent({id, name, subject, gender});
             ctx.body = updatedStudent;
         } catch (error) {

@@ -8,8 +8,9 @@ import path from 'path'
 const app = new koa()
 const koa_parser = require('koa-parser');
 
-
 app.use(koa_parser());
+require('koa-validate')(app);
+
 // app.use(ctx=>{
 //     ctx.body="hello world"
 // });
