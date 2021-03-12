@@ -4,7 +4,6 @@ import {StudentSubjectService} from '../services/student_subjects'
 
 export default class StudentSubjectController{
     public static async assignSubject(ctx:Context){
-        console.log("in assignment controller");
         const student_subject_service = new StudentSubjectService()
         try {
             const { student_id } = ctx.request.body;

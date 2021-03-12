@@ -17,8 +17,6 @@ export class StudentSubjectService{
             },
             relations: ["subject"]
         })
-        console.log(studentId)
-        console.log(student);
         const subject = await this.subjectrepository.findOne({
             where:{
                 id:subjectId
