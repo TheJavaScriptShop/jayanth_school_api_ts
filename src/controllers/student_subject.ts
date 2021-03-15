@@ -6,10 +6,12 @@ export default class StudentSubjectController{
     public static async assignSubject(ctx:Context){
         const student_subject_service = new StudentSubjectService()
         try {
-            const { student_id } = ctx.request.body;
-            const { subject_id } = ctx.request.body;
+            const { studentId } = ctx.request.body;
+            const { subjectId } = ctx.request.body;
+            ctx.checkBody('studentId').notEmpty('student id cannot be empty').isInt('student Id should be int or number ')
+            ctx.checkBody('subjectId').notEmpty('subject id cannot be empty').isInt('subject Id should be int or number ')
             //const assigned_student = await student_subject_service.assign_subject(student_id , subject_id);
-            student_subject_service.assignSubject(student_id, subject_id)
+            student_subject_service.assignSubject(studentId, subjectId)
             ctx.body = "successfully assigned"
 
         } catch (error) {

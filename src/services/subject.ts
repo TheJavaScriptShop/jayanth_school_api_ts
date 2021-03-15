@@ -38,15 +38,21 @@ export class SubjectService{
         return subject
     }
 
-    public async updateSubject(s:Partial<Subject>){
+    public async updateSubject(s:Partial<Subject>,teacherId:number){
         const subject = await this.subjectrepository.findOne({
             where:{
                 id:s.id
             }
         })
+        const assignteacher = await this.teacherrepository.findOne({
+            where:{
+                id:teacherId
+            }
+        })
         subject.id = s.id;
         subject.name = s.name;
         subject.student = s.student;
+        subject.teacher = assignteacher
         return this.subjectrepository.save(subject);
     }
 

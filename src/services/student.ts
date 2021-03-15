@@ -29,6 +29,7 @@ export class StudentService {
             }
         })
         // console.log(student);
+        student.id = s.id
         student.name = s.name;
         student.subject = s.subject;
         student.gender = s.gender;
