@@ -43,7 +43,11 @@ export class StudentService {
                 id:s.id
             }
         })
-        this.studentRepository.delete(student);
+        if(!student){
+            throw new Error("There are no Student with this ID");
+        }else{
+            this.studentRepository.delete(student);   
+        }
     }
 
     public async getAllStudents(){

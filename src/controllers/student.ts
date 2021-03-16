@@ -12,9 +12,11 @@ export default class StudentController{
             ctx.checkBody('gender').match(/m|M|male|Male|f|F|female|Female/,'gender should be male or female');
             if (ctx.errors) {
                 ctx.body = ctx.errors;
+                ctx.response.status = 400;
             } else {
                 const student = await studentservice.createStudent(ctx.request.body)
-                ctx.body = student
+                ctx.body = student;
+                ctx.response.status = 200;
             }
         } catch (error) {
             console.log(error)
@@ -30,9 +32,11 @@ export default class StudentController{
             ctx.checkBody('gender').match(/m|M|male|Male|f|F|female|Female/,'gender should be male or female');
             if(ctx.errors){
                 ctx.body = ctx.errors
+                ctx.response.status = 400;
             }else{
                 const updatedStudent = await studentservice.updateStudent({id, name, subject, gender });
-                ctx.body = updatedStudent;
+                ctx.body = {student: updatedStudent, message: "updated Successfully"}
+                ctx.response.status=200
             }
         } catch (error) {
             console.log(error)
@@ -42,12 +46,19 @@ export default class StudentController{
     public static async deleteStudent(ctx:Context){
         const studentservice = new StudentService();
         try {
-            const {id} = ctx.request.body;
-            ctx.checkBody('id').notEmpty('student Id should not be empty').isInt('id should be integer or number')
-            const deleteStudent = await studentservice.deleteStudent({id})
-            ctx.body = "deleted Successfully";
+            // const {id} = ctx.request.body;
+            ctx.checkBody('id').notEmpty('student Id should not be empty').isNumeric('id should be integer or number')
+            if(ctx.errors){
+                ctx.body = ctx.errors
+                ctx.response.status = 400
+            }
+            else{
+                const deleteStudent = await studentservice.deleteStudent(ctx.request.body)
+                ctx.body = "deleted Successfully";
+                ctx.response.status = 200
+            }
         } catch (error) {
-            console.log(error)
+            ctx.body = { message:error.message }
         }
     }
 
@@ -55,7 +66,12 @@ export default class StudentController{
         const studentservice = new StudentService();
         try {
             const students = await studentservice.getAllStudents()
-            ctx.body = students;
+            if(students.length<=0){
+                ctx.body = { message:"There are no students " }
+            }else{
+                ctx.body = students;
+                ctx.response.status = 200;
+            }
         } catch (error) {
             console.log(error)
         }
@@ -64,9 +80,22 @@ export default class StudentController{
     public static async getOneStudent(ctx:Context){
         const studentservice = new StudentService();
         try {
-            const {id} = ctx.request.body
-            const student = await studentservice.getStudentById({id});
-            ctx.body = student;
+            const id = ctx.request.body
+            ctx.checkBody('id').notEmpty('id cannot be empty').isInt('id should be int or number')
+            console.log(ctx.errors)
+            if(ctx.errors){
+                ctx.body = ctx.errors
+                ctx.response.status = 400
+            }else{
+                const student = await studentservice.getStudentById(id);
+                if(!student){
+                    ctx.body = { message: " There is no student with this id " }
+                    ctx.response.status = 404
+                }else{
+                    ctx.body = student;
+                    ctx.response.status = 200;
+                }
+            }
         } catch (error) {
             console.log(error)
         }

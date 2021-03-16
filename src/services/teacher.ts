@@ -52,6 +52,10 @@ export class TeacherService{
                 id:teacherId
             }
         })
-        return this.teacherrepository.delete(deleteTeacher)
+        if(!deleteTeacher){
+            throw new Error("There is no Teacher with this ID");
+        }else{
+            return this.teacherrepository.delete(deleteTeacher)
+        }
     }
 }

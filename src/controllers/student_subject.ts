@@ -10,10 +10,13 @@ export default class StudentSubjectController{
             const { subjectId } = ctx.request.body;
             ctx.checkBody('studentId').notEmpty('student id cannot be empty').isInt('student Id should be int or number ')
             ctx.checkBody('subjectId').notEmpty('subject id cannot be empty').isInt('subject Id should be int or number ')
-            //const assigned_student = await student_subject_service.assign_subject(student_id , subject_id);
-            student_subject_service.assignSubject(studentId, subjectId)
-            ctx.body = "successfully assigned"
-
+            if(ctx.errors){
+                ctx.body = ctx.errors;
+                ctx.response.status = 400;
+            }else{
+                student_subject_service.assignSubject(studentId, subjectId)
+                ctx.body = {message:"successfuly assigned " }
+            }
         } catch (error) {
             console.log(error)
         }

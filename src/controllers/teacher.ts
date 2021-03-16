@@ -12,9 +12,11 @@ export default class TeacherControllers{
             ctx.checkBody('subject').len(3,20,'subject name should be min of 3 characters and max of 10 characters')
             if(ctx.errors){
                 ctx.body = ctx.errors
+                ctx.response.status = 400;
             }else{
                 const newTeacher = await teacherService.create({id,name,gender,subject})
                 ctx.body = newTeacher
+                ctx.response.status = 200
             }
         } catch (error) {
             console.log(error)
@@ -25,8 +27,20 @@ export default class TeacherControllers{
         const teacherService = new TeacherService()
         try {
             const {id} = ctx.request.body
-            const teacher = await teacherService.getTeacher(id);
-            ctx.body = teacher
+            ctx.checkBody('id').notEmpty('id cannot be empty').isInt('id should be int or number')
+            if(ctx.errors){
+                ctx.body=ctx.errors
+                ctx.response.status = 400;
+            }
+            else{
+                const teacher = await teacherService.getTeacher(id);
+                if(!teacher){
+                    ctx.body = {message:"There are no teachers with this ID"}
+                }else{
+                 ctx.body = teacher;
+                 ctx.response.status = 200    
+                }
+            }
         } catch (error) {
             console.log(error)
         }
@@ -36,7 +50,12 @@ export default class TeacherControllers{
         const teacherService = new TeacherService()
         try {
             const teachers = await teacherService.getAllTeachers()
-            ctx.body = teachers
+            if(teachers.length<=0){
+                ctx.body = {message:"There are no Teachers"}
+            }else{
+                ctx.body = teachers
+                ctx.response.status = 200
+            }
         } catch (error) {
             console.log(error)
         }
@@ -52,9 +71,11 @@ export default class TeacherControllers{
             ctx.checkBody('subject').optional().len(3,20,'subject name should be min of 3 characters and max of 10 characters')
             if(ctx.errors){
                 ctx.body = ctx.errors
+                ctx.response.status = 400
             }else{
                 const updatedTeacher = await teacherService.updateTeacher({id,name,gender,subject})
                 ctx.body = updatedTeacher
+                ctx.response.status = 200
             }
         } catch (error) {
             console.log(error)
@@ -68,13 +89,15 @@ export default class TeacherControllers{
             ctx.checkBody('id').notEmpty('id cannot be null').isInt('id should be number ')
             if(ctx.errors){
                 ctx.body = ctx.errors
+                ctx.response.status = 400
             }
             else{
                 const deletedTeacher = await teacherService.deleteTeacher(id);
                 ctx.body = "deleted Succesfully"
+                ctx.response.status = 200
             }
         } catch (error) {
-            console.log(error)
+            ctx.body= {message:error.message}
         }
     }
 }
