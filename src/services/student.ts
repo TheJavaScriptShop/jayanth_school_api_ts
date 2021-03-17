@@ -22,18 +22,15 @@ export class StudentService {
     }
 
     public async updateStudent(s:Partial<Student>){
-        // console.log(s);
         const student = await this.studentRepository.findOne({
             where:{
                 id:s.id
             }
         })
-        // console.log(student);
         student.id = s.id
         student.name = s.name;
         student.subject = s.subject;
         student.gender = s.gender;
-        //this.studentRepository.update({where:{id:s.id}},{name:s.name,subject:s.subject,gender:s.gender})
         return this.studentRepository.save(student)
     }
 

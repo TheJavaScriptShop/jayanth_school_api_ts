@@ -1,5 +1,4 @@
 import {getManager , Repository} from 'typeorm'
-import { HighlightSpanKind } from 'typescript'
 import {Teacher} from '../entities/teacher'
 
 export class TeacherService{

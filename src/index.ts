@@ -4,6 +4,8 @@ import {studentRouter} from './routes/student'
 import {subjectRoutes} from './routes/subject'
 import {student_subject_router} from './routes/student_subject'
 import {teacherRoutes} from './routes/teacher'
+import {examRoutes} from './routes/examinations'
+import {resultRoutes} from './routes/result'
 import path from 'path'
 const app = new koa()
 const koa_parser = require('koa-parser');
@@ -19,6 +21,8 @@ app.use(studentRouter.routes());
 app.use(subjectRoutes.routes());
 app.use(student_subject_router.routes());
 app.use(teacherRoutes.routes());
+app.use(examRoutes.routes());
+app.use(resultRoutes.routes());
 
 createConnection({
     type:'postgres',

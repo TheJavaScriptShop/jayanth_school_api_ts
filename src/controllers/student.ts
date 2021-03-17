@@ -6,7 +6,6 @@ export default class StudentController{
     public static async createNewStudent(ctx:Context){
         const studentservice = new StudentService();
         try {
-            // const {name, subject, gender } = ctx.request.body;
             ctx.checkBody('name').len(3,20,"length of name should be min:3 and max:20 characters");
             ctx.checkBody('subject').notEmpty('subject should not be empty');
             ctx.checkBody('gender').match(/m|M|male|Male|f|F|female|Female/,'gender should be male or female');
@@ -46,7 +45,6 @@ export default class StudentController{
     public static async deleteStudent(ctx:Context){
         const studentservice = new StudentService();
         try {
-            // const {id} = ctx.request.body;
             ctx.checkBody('id').notEmpty('student Id should not be empty').isNumeric('id should be integer or number')
             if(ctx.errors){
                 ctx.body = ctx.errors
@@ -82,7 +80,6 @@ export default class StudentController{
         try {
             const id = ctx.request.body
             ctx.checkBody('id').notEmpty('id cannot be empty').isInt('id should be int or number')
-            console.log(ctx.errors)
             if(ctx.errors){
                 ctx.body = ctx.errors
                 ctx.response.status = 400
