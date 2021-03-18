@@ -55,9 +55,13 @@ export default class ResultControllers{
             const { resId } = ctx.request.body
 
             ctx.checkBody('resId').notEmpty('It cannot be empty').isInt('It should be a number')
-
-            const result = await resultService.getOneResult(resId);
-            ctx.body = result
+            if(ctx.errors){
+                ctx.body = ctx.errors;
+                ctx.response.status = 400;
+            }else{
+                const result = await resultService.getOneResult(resId);
+                ctx.body = result
+            }
 
         } catch (error) {
             ctx.body = { message: error.message }
@@ -82,8 +86,15 @@ export default class ResultControllers{
 
         try {
             const { resId } = ctx.request.body;
-            const result = await resultService.deleteResult(resId);
-            ctx.body = { message:"deleted successfully" }
+            ctx.checkBody('resId').notEmpty('This cannot be empty').isInt('It should be a number')
+
+            if(ctx.errors){
+                ctx.body = ctx.errors;
+                ctx.response.status = 400;
+            }else{
+                const result = await resultService.deleteResult(resId);
+                ctx.body = { message:"deleted successfully" }
+            }
             
         } catch (error) {
             ctx.body = { message:error.message }
