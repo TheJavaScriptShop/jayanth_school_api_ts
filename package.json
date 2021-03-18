@@ -7,7 +7,7 @@
     "build": "tsc",
     "watch": "tsc -w",
     "dev": "nodemon dist/index.js",
-    "typeorm": "ts-node ./node_modules/typeorm/cli.js -f ./ormconfig.ts"
+    "typeorm:cli": "ts-node ./node_modules/typeorm/cli.js -f ormconfig.json"
   },
   "author": "",
   "license": "ISC",

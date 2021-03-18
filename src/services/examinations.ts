@@ -4,22 +4,27 @@ import {Teacher} from '../entities/teacher'
 import {Subject} from '../entities/subject'
 
 export class ExamService{
-    examrespository:Repository<Examinations>
-    teacherrepository:Repository<Teacher>
-    subjectrepository:Repository<Subject>
+   
+    examrespository: Repository<Examinations>
+    teacherrepository: Repository<Teacher>
+    subjectrepository: Repository<Subject>
+   
     constructor(){
         this.examrespository = getManager().getRepository(Examinations)
         this.teacherrepository = getManager().getRepository(Teacher)
         this.subjectrepository = getManager().getRepository(Subject)
     }
 
-    public async createExam(examinations:Partial<Examinations>, teacherId: number, subjectId:number){
+    public async createExam(examinations: Partial<Examinations>, teacherId: number, subjectId: number){
+        
         const assignTeacher = await this.teacherrepository.findOne({
             where:{
                 id:teacherId
             }
         })
+        
         if(!assignTeacher){
+
             throw new Error("Teacher not found");
             
         }
@@ -29,21 +34,23 @@ export class ExamService{
             }
         })
         if(!subject){
+
             throw new Error("Subject not found");
             
         }
         const exam = await this.examrespository.create({
             id: examinations.id,
-            exam_name:examinations.exam_name,
-            subject_name:subject.name,
-            total_marks:examinations.total_marks,
-            max_time:examinations.max_time,
-            teacher:assignTeacher
+            exam_name: examinations.exam_name,
+            subject_name: subject.name,
+            total_marks: examinations.total_marks,
+            max_time: examinations.max_time,
+            teacher: assignTeacher
         })
+        
         return this.examrespository.save(exam);
     }
 
-    public async updateExam(exam :Partial<Examinations>, teacherId :number, subjectId: number){
+    public async updateExam(exam: Partial<Examinations>, teacherId: number, subjectId: number){
 
         const updateExam = await this.examrespository.findOne({
             where:{

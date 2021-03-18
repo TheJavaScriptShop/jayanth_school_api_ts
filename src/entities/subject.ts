@@ -1,18 +1,20 @@
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn, JoinTable, ManyToOne} from "typeorm";
 import {Student} from '../entities/student'
 import {Teacher} from '../entities/teacher'
+
 @Entity('Subject')
 export class Subject{
+
     @PrimaryGeneratedColumn()
-    id:number
+    id: number
 
     @Column()
-    name:string
+    name: string
 
-    @ManyToMany(()=> Student , (student)=>student)
-    @JoinTable({name: 'student_subject'})
-    student:Student[]
+    @ManyToMany(()=> Student, (student)=>student)
+    @JoinTable({ name: 'student_subject' })
+    student: Student[]
 
-    @ManyToOne(()=>Teacher , (teacher)=>teacher.subject,{onUpdate:'CASCADE',onDelete:'SET NULL' ,nullable: true})
-    teacher:Teacher
+    @ManyToOne(()=>Teacher, (teacher)=>teacher.subject, { onUpdate: 'CASCADE',onDelete: 'SET NULL' ,nullable: true })
+    teacher: Teacher
 }

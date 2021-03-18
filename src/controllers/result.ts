@@ -4,12 +4,16 @@ import {ResultService} from '../services/result'
 export default class ResultControllers{
     
     public static async addResult(ctx:Context){
+        
         const resultService = new ResultService()
+        
         try {
             const { marks, student, exam } = ctx.request.body
+        
             ctx.checkBody('marks').notEmpty('marks cannot be empty')
             ctx.checkBody('student').notEmpty('student id cannot be empty').isInt('it should be number')
             ctx.checkBody('exam').notEmpty('it cannot be empty').isInt('it should be number')
+        
             if(ctx.errors){
                 ctx.body = ctx.errors
                 ctx.response.status = 400
@@ -17,6 +21,7 @@ export default class ResultControllers{
                 const result = await resultService.createResult(student,exam,marks)
                 ctx.body = result
             }
+        
         } catch (error) {
             ctx.body = error
         }
@@ -74,6 +79,7 @@ export default class ResultControllers{
 
         try {
             const results = await resultService.getResults()
+            
             ctx.body = { message:"Success" , results }
         } catch (error) {
             ctx.body= { message:error.message }

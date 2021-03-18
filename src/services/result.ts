@@ -4,25 +4,29 @@ import {Student} from '../entities/student'
 import {Examinations} from '../entities/examinations'
 
 export class ResultService{
-   resultrepository:Repository<Result>
-   studentrepository:Repository<Student>
-   examrepository:Repository<Examinations>
+
+   resultrepository: Repository<Result>
+   studentrepository: Repository<Student>
+   examrepository: Repository<Examinations>
+   
    constructor(){
        this.resultrepository = getManager().getRepository(Result)
        this.studentrepository= getManager().getRepository(Student)
        this.examrepository = getManager().getRepository(Examinations)
-   }
-   public async createResult(sid:number , examId:number , marks:number){
+    }
+   
+    public async createResult(sid: number , examId: number , marks: number){
        
        const result = await this.resultrepository.create({
-           marks:marks,
-           student:{id:sid},
-           exam:{id:examId}
+           marks: marks,
+           student: {id:sid},
+           exam: {id:examId}
        })
+       
        return this.resultrepository.save(result)
    }
 
-   public async updateResult(resId:number, examId:number , sId:number , marks:number ){
+   public async updateResult(resId: number, examId: number , sId: number , marks: number ){
         
         const updateResult = await this.resultrepository.findOne({
             id:resId
@@ -76,7 +80,7 @@ export class ResultService{
 
    public async getResults(){
 
-    const results = await this.resultrepository.find({relations:['student','exam']})
+    const results = await this.resultrepository.find({relations: ['student','exam']})
 
     if(results.length<=0){
         throw new Error("No results found");
@@ -85,7 +89,7 @@ export class ResultService{
     }
    }
 
-   public async deleteResult(resId:number){
+   public async deleteResult(resId: number){
 
     const result = await this.resultrepository.findOne({
         where:{

@@ -11,20 +11,21 @@ export enum Gender{
 
 @Entity('Student')
 export class Student{
+
     @PrimaryGeneratedColumn()
-    id:number
+    id: number
 
     @Column()
-    name:string
+    name: string
 
-    @ManyToMany(()=>Subject ,(subject)=>subject)
-    @JoinTable({name: 'student_subject'})
-    subject:Subject[]
+    @ManyToMany(()=>Subject, (subject)=>subject)
+    @JoinTable({ name: 'student_subject' })
+    subject: Subject[]
 
     @IsEnum(Gender)
     @Column()
-    gender:string
+    gender: string
 
-    @OneToMany(()=>Result,(result)=>result.marks,{onUpdate:'CASCADE'})
-    marks:Result
+    @OneToMany(()=>Result, (result)=>result.marks, { onUpdate: 'CASCADE' })
+    marks: Result
 }

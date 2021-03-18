@@ -2,14 +2,14 @@ import StudentController from '../controllers/student';
 import Router from 'koa-router';
 const studentRouter = new Router()
 
-studentRouter.post('/create',StudentController.createNewStudent);
+studentRouter.post('/student/create', StudentController.createNewStudent);
 
-studentRouter.put('/update',StudentController.updateStudent);
+studentRouter.put('/student/update', StudentController.updateStudent);
 
-studentRouter.delete('/delete',StudentController.deleteStudent);
+studentRouter.delete('/student/delete', StudentController.deleteStudent);
 
-studentRouter.get('/getallstudents',StudentController.getStudents);
+studentRouter.get('/student/getall', StudentController.getStudents);
 
-studentRouter.get('/getstudent',StudentController.getOneStudent);
+studentRouter.get('/student/getone', StudentController.getOneStudent);
 
 export {studentRouter}

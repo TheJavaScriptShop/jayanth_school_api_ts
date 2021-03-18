@@ -2,8 +2,11 @@ import { Context } from 'koa';
 import {StudentSubjectService} from '../services/student_subjects'
 
 export default class StudentSubjectController{
+    
     public static async assignSubject(ctx:Context){
+        
         const student_subject_service = new StudentSubjectService()
+        
         try {
             const { studentId } = ctx.request.body;
             const { subjectId } = ctx.request.body;

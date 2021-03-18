@@ -7,15 +7,12 @@ import {teacherRoutes} from './routes/teacher'
 import {examRoutes} from './routes/examinations'
 import {resultRoutes} from './routes/result'
 import path from 'path'
+
 const app = new koa()
 const koa_parser = require('koa-parser');
 
 app.use(koa_parser());
 require('koa-validate')(app);
-
-// app.use(ctx=>{
-//     ctx.body="hello world"
-// });
 
 app.use(studentRouter.routes());
 app.use(subjectRoutes.routes());
