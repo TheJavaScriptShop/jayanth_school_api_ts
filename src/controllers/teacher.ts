@@ -51,6 +51,7 @@ export default class TeacherControllers{
                  ctx.body = teacher;
                  ctx.response.status = 200    
                 }
+
             }
     
         } catch (error) {

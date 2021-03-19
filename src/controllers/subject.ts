@@ -14,8 +14,6 @@ export default class SubjectControllers{
             ctx.checkBody('teacherId').isInt('teacher Id should be a number')
             ctx.checkBody('student').empty()
     
-            console.log(ctx.errors)
-    
             if(ctx.errors){
                 ctx.body = ctx.errors
                 ctx.response.status = 400
@@ -36,6 +34,7 @@ export default class SubjectControllers{
       
         try {
             const subjects = await subjectservice.getSubjects()
+
             if(subjects.length<=0){
                 ctx.body = { message:"There are no subjects" }
             }else{
@@ -54,6 +53,7 @@ export default class SubjectControllers{
      
         try {
             ctx.checkBody('id').notEmpty('id cannot be empty').isInt('id should be int or number')
+            
             if(ctx.errors){
                 ctx.body = ctx.errors
                 ctx.response.status = 400
@@ -61,7 +61,7 @@ export default class SubjectControllers{
                 const subject = await subjectservice.getSubjectById(ctx.request.body.id);
           
                 if(!subject){
-                    ctx.body = { message:"There is no subject with this ID" }
+                    ctx.body = { message: "There is no subject with this ID" }
                 }else{
                     ctx.body = subject
                     ctx.response.status = 200
@@ -106,7 +106,6 @@ export default class SubjectControllers{
         try {
             // const id  = ctx.request.body;
             ctx.checkBody('id').notEmpty('subject Id cannot be empty').isInt('subject Id should be integer or number')
-            console.log(ctx.errors)
        
             if(ctx.errors){
                 ctx.body = ctx.errors
@@ -114,6 +113,7 @@ export default class SubjectControllers{
             }
             else{
                 const deletedSubject = await subjectservice.deleteSubject(ctx.request.body.id)
+                
                 ctx.body = "deleted Successfully"
                 ctx.response.status = 200
             }

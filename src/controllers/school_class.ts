@@ -1,0 +1,116 @@
+import { Context } from "koa"
+import { ClassService } from '../services/school_class'
+
+export default class ClassController{
+
+    public static async createClass(ctx:Context){
+
+        const classService = new ClassService()
+
+        try {
+            const { id, className, section } = ctx.request.body
+
+            ctx.checkBody('id').optional().notEmpty('Id cannot be empty').isInt('It should be a number')
+            ctx.checkBody('className').notEmpty('It cannot be empty')
+            ctx.checkBody('section').optional().notEmpty('section cannot empty')
+
+            if(ctx.errors){
+                ctx.body = ctx.errors
+                ctx.response.status = 400
+            }else{
+                const newClass = await classService.createClass({id, className, section })
+                ctx.body = newClass
+            }
+
+        } catch (error) {
+           ctx.body = { message: error.message } 
+        }
+
+    }
+
+    public static async getOneClass(ctx:Context){
+
+        const classService = new ClassService()
+
+        try {
+            const { clsId } = ctx.request.body
+
+            ctx.checkBody('clsId').notEmpty("Please provide Class ID").isInt("class Id should be number")
+
+            if(ctx.errors){
+                ctx.body = ctx.errors
+                ctx.response.status = 400
+            }else{
+                const cls = await classService.getSingleClass(clsId)
+                ctx.body = { message: "Success", cls }
+            }
+
+        } catch (error) {
+           ctx.body = { message: error.message } 
+        }
+
+    }
+
+    public static async getAll(ctx: Context){
+
+        const classService = new ClassService()
+
+        try {
+            const classes = await classService.getAllClasses()
+            ctx.body = classes
+            
+        } catch (error) {
+            ctx.body = { message: error.message }
+        }
+
+    }
+
+    public static async updateClass(ctx: Context){
+
+        const classService = new ClassService()
+
+        try {
+            const { id, className, section }  = ctx.request.body
+
+            ctx.checkBody('id').notEmpty('Please provide class ID').isInt("Id should be number")
+            ctx.checkBody('className').optional().notEmpty('Please provide className')
+            ctx.checkBody('section').optional().notEmpty('Please provide section')
+
+            if(ctx.errors){
+                ctx.body = ctx.errors
+                ctx.response.status = 400
+            }else{
+                const updatedClass = await classService.updateClass({ id, className, section })
+                ctx.body = { message: "updated Successfully", updatedClass }
+            }
+            
+        } catch (error) {
+           ctx.body = { message: error.message } 
+        }
+
+    }
+
+    public static async deleteClass(ctx: Context){
+
+        const classService = new ClassService()
+
+        try {
+            const { clsId } = ctx.request.body
+
+            ctx.checkBody('clsId').notEmpty('Please Provide clsId')
+
+            if(ctx.errors){
+                ctx.body = ctx.errors
+                ctx.response.status = 400
+            }else{
+                const deleteClass = await classService.deleteClass(clsId)
+                ctx.body = { message: "deleted Successfully" }
+            }
+
+        } catch (error) {
+           ctx.body = { message: error.message } 
+        }
+
+    }
+
+}

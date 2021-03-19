@@ -11,7 +11,7 @@ export class Section{
     @Column()
     name: string
 
-    @ManyToOne(()=>SchoolClass, (schoolClass) => schoolClass.id)
+    @ManyToOne(()=>SchoolClass, (schoolClass) => schoolClass.id, { onUpdate:"CASCADE", onDelete: "SET NULL", nullable: true })
     schoolClass: SchoolClass
 
 }

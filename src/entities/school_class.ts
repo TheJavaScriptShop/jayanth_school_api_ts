@@ -10,7 +10,7 @@ export class SchoolClass{
     @Column()
     className: number
 
-    @OneToMany(()=>Section, (section)=>section)
+    @OneToMany(()=>Section, (section)=>section.schoolClass, { onUpdate: "CASCADE", onDelete: "SET NULL" })
     section: Section[]
 
 }

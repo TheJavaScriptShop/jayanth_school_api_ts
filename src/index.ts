@@ -1,11 +1,13 @@
 import koa from "koa"
 import { createConnection } from "typeorm";
-import {studentRouter} from './routes/student'
-import {subjectRoutes} from './routes/subject'
-import {student_subject_router} from './routes/student_subject'
-import {teacherRoutes} from './routes/teacher'
-import {examRoutes} from './routes/examinations'
-import {resultRoutes} from './routes/result'
+import { studentRouter } from './routes/student'
+import { subjectRoutes } from './routes/subject'
+import { student_subject_router } from './routes/student_subject'
+import { teacherRoutes } from './routes/teacher'
+import { examRoutes } from './routes/examinations'
+import { resultRoutes } from './routes/result'
+import { classRoutes } from './routes/school_class'
+import { sectionRoutes } from './routes/section'
 import path from 'path'
 
 const app = new koa()
@@ -20,22 +22,24 @@ app.use(student_subject_router.routes());
 app.use(teacherRoutes.routes());
 app.use(examRoutes.routes());
 app.use(resultRoutes.routes());
+app.use(classRoutes.routes());
+app.use(sectionRoutes.routes());
 
 createConnection({
-    type:'postgres',
-    host:'localhost',
-    port:5432,
-    database:'schoolDB',
-    entities:['dist/entities/*.js'],
-    synchronize:false,
-    logging:true,
-    migrations:[path.join(__dirname, 'migrations', '*.js')]
-}).then(()=>{
+    type: 'postgres',
+    host: 'localhost',
+    port: 5432,
+    database: 'schoolDB',
+    entities: ['dist/entities/*.js'],
+    synchronize: false,
+    logging: true,
+    migrations: [path.join(__dirname, 'migrations', '*.js')]
+}).then(() => {
     console.log("connected successfully");
-}).catch((err)=>{
+}).catch((err) => {
     console.log(err);
 })
 
-app.listen(8080, ()=>{
+app.listen(8080, () => {
     console.log("server started")
 })

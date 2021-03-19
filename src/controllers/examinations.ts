@@ -68,8 +68,13 @@ export default class ExamControllers{
             
             ctx.checkBody('examId').notEmpty('This cannot be empty').isInt('This should be a number')
 
-            const exam = await examService.getOneExam(examId)
-            ctx.body = exam
+            if(ctx.errors){
+                ctx.body = ctx.errors
+                ctx.response.status = 400
+            }else{
+                const exam = await examService.getOneExam(examId)
+                ctx.body = exam
+            }    
 
         } catch (error) {
             ctx.body = { message: error.message }
@@ -96,12 +101,19 @@ export default class ExamControllers{
 
         ctx.checkBody('examId').notEmpty('It cannot be empty').isInt('It should be number')
         
-        try {
-            const exam = await examService.deleteExam(examId)
-            ctx.body = { message: "deleted successfully" }
-
-        } catch (error) {
-            ctx.body = { message: error.message }
+        if(ctx.errors){
+            ctx.body = ctx.errors
+            ctx.response.status = 400
+        }else{
+         
+            try {
+                const exam = await examService.deleteExam(examId)
+                ctx.body = { message: "deleted successfully" }
+    
+            } catch (error) {
+                ctx.body = { message: error.message }
+            }
+    
         }
     }
 }
