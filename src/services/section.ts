@@ -67,20 +67,24 @@ export class SectionService {
                 id: section.id
             }
         })
-        const cls = await this.classRepository.findOne({
-            where: {
-                id: clsId
-            }
-        })
 
         if (!updateSection) {
-            throw new Error("Not Found");
+            throw new Error("No Section Found");
         } else {
-            updateSection.name = section.name
-            updateSection.id = section.id
-            updateSection.schoolClass = cls
+            const cls = await this.classRepository.findOne({
+                where: {
+                    id: clsId
+                }
+            })
+            if (!cls) {
+                throw new Error("No class Found with this ID");
+            } else {
+                updateSection.name = section.name
+                updateSection.id = section.id
+                updateSection.schoolClass = cls
 
-            return this.sectionRepository.save(updateSection)
+                return this.sectionRepository.save(updateSection)
+            }
         }
 
     }

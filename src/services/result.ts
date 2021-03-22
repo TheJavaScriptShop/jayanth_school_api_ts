@@ -17,13 +17,31 @@ export class ResultService {
 
     public async createResult(sid: number, examId: number, marks: number) {
 
-        const result = await this.resultrepository.create({
-            marks: marks,
-            student: { id: sid },
-            exam: { id: examId }
+        const student = await this.studentrepository.findOne({
+            where: {
+                id: sid
+            }
         })
+        if (!student) {
+            throw new Error("NO student Found with this ID");
+        } else {
+            const exam = await this.examrepository.findOne({
+                where: {
+                    id: examId
+                }
+            })
+            if (!exam) {
+                throw new Error('No exam Found')
+            } else {
+                const result = await this.resultrepository.create({
+                    marks: marks,
+                    student: student,
+                    exam: exam
+                })
 
-        return this.resultrepository.save(result)
+                return this.resultrepository.save(result)
+            }
+        }
     }
 
     public async updateResult(resId: number, examId: number, sId: number, marks: number) {

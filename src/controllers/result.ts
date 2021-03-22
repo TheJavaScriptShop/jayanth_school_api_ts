@@ -8,22 +8,22 @@ export default class ResultControllers {
         const resultService = new ResultService()
 
         try {
-            const { marks, student, exam } = ctx.request.body
+            const { marks, studentId, examId } = ctx.request.body
 
             ctx.checkBody('marks').notEmpty('marks cannot be empty')
-            ctx.checkBody('student').notEmpty('student id cannot be empty').isInt('it should be number')
-            ctx.checkBody('exam').notEmpty('it cannot be empty').isInt('it should be number')
+            ctx.checkBody('studentId').notEmpty('student id cannot be empty').isInt('it should be number')
+            ctx.checkBody('examId').notEmpty('it cannot be empty').isInt('it should be number')
 
             if (ctx.errors) {
                 ctx.body = ctx.errors
                 ctx.response.status = 400
             } else {
-                const result = await resultService.createResult(student, exam, marks)
+                const result = await resultService.createResult(studentId, examId, marks)
                 ctx.body = result
             }
 
         } catch (error) {
-            ctx.body = error
+            ctx.body = { message: error.message }
         }
     }
 
