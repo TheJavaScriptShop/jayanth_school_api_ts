@@ -12,4 +12,4 @@ studentRouter.get('/student/getall', StudentController.getStudents);
 
 studentRouter.get('/student/getone', StudentController.getOneStudent);
 
-export {studentRouter}
+export { studentRouter }

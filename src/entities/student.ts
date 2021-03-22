@@ -1,16 +1,16 @@
-import {Entity,Column,PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany} from 'typeorm'
-import {IsEnum} from 'class-validator'
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm'
+import { IsEnum } from 'class-validator'
 import { Subject } from './subject'
-import {Result} from '../entities/result'
+import { Result } from '../entities/result'
 
-export enum Gender{
+export enum Gender {
     'male',
     'famale',
     'others'
 }
 
 @Entity('Student')
-export class Student{
+export class Student {
 
     @PrimaryGeneratedColumn()
     id: number
@@ -18,7 +18,7 @@ export class Student{
     @Column()
     name: string
 
-    @ManyToMany(()=>Subject, (subject)=>subject)
+    @ManyToMany(() => Subject, (subject) => subject)
     @JoinTable({ name: 'student_subject' })
     subject: Subject[]
 
@@ -26,6 +26,6 @@ export class Student{
     @Column()
     gender: string
 
-    @OneToMany(()=>Result, (result)=>result.marks, { onUpdate: 'CASCADE' })
+    @OneToMany(() => Result, (result) => result.marks, { onUpdate: 'CASCADE' })
     marks: Result
 }

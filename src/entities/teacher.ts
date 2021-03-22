@@ -1,8 +1,8 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import {Subject} from '../entities/subject'
-import {Examinations} from '../entities/examinations'
+import { Subject } from '../entities/subject'
+import { Examinations } from '../entities/examinations'
 @Entity('Teacher')
-export class Teacher{
+export class Teacher {
 
     @PrimaryGeneratedColumn()
     id: number
@@ -13,9 +13,9 @@ export class Teacher{
     @Column()
     gender: string
 
-    @OneToMany(()=> Subject, (subject)=>subject.teacher, { onUpdate:'CASCADE' })
+    @OneToMany(() => Subject, (subject) => subject.teacher, { onUpdate: 'CASCADE' })
     subject: Subject[]
 
-    @OneToMany(()=>Examinations, (examinations)=>examinations.teacher)
+    @OneToMany(() => Examinations, (examinations) => examinations.teacher)
     examinations: Examinations[]
 }

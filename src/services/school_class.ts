@@ -17,49 +17,49 @@ export class ClassService {
         const newClass = await this.classRepository.create({
             id: cls.id,
             className: cls.className,
-            section:cls.section
+            section: cls.section
         })
 
         return this.classRepository.save(newClass)
     }
 
-    public async getSingleClass(clsId:number){
+    public async getSingleClass(clsId: number) {
 
         const cls = await this.classRepository.findOne({
             where: {
                 id: clsId
             }
         })
-        if(!cls){
+        if (!cls) {
             throw new Error("No Class Found");
-        }else{
+        } else {
             return cls
         }
 
     }
 
-    public async getAllClasses(){
+    public async getAllClasses() {
 
         const classes = await this.classRepository.find()
 
-        if(classes.length<=0){
+        if (classes.length <= 0) {
             throw new Error("There are no classes")
-        }else{
+        } else {
             return classes
         }
 
     }
 
-    public async updateClass(cls: Partial<SchoolClass>){
+    public async updateClass(cls: Partial<SchoolClass>) {
 
         const updateClass = await this.classRepository.findOne({
             where: {
-                id:cls.id
+                id: cls.id
             }
         })
-        if(!updateClass){
+        if (!updateClass) {
             throw new Error("No class found");
-        }else{
+        } else {
             updateClass.className = cls.className
             updateClass.section = cls.section
             return this.classRepository.save(updateClass)
@@ -67,7 +67,7 @@ export class ClassService {
 
     }
 
-    public async deleteClass(clsId: number){
+    public async deleteClass(clsId: number) {
 
         const deleteClass = await this.classRepository.findOne({
             where: {
@@ -75,11 +75,11 @@ export class ClassService {
             }
         })
 
-        if(!deleteClass){
+        if (!deleteClass) {
             throw new Error("No Class Found may be deleted already");
-        }else{
+        } else {
             return this.classRepository.delete(deleteClass)
         }
-        
+
     }
 }

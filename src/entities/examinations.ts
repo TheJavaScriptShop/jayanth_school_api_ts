@@ -1,12 +1,12 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import {Teacher} from '../entities/teacher'
+import { Teacher } from '../entities/teacher'
 
 @Entity('examinations')
-export class Examinations{
+export class Examinations {
 
     @PrimaryGeneratedColumn()
     id: number
-    
+
     @Column()
     exam_name: string
 
@@ -16,10 +16,10 @@ export class Examinations{
     @Column()
     total_marks: number
 
-    @Column({ nullable:true })
+    @Column({ nullable: true })
     max_time: number
 
-    @ManyToOne(()=>Teacher, (teacher)=>teacher.examinations)
+    @ManyToOne(() => Teacher, (teacher) => teacher.examinations)
     teacher: Teacher
 
 }

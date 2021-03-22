@@ -3,7 +3,7 @@ import { SchoolClass } from "./school_class";
 
 
 @Entity('section')
-export class Section{
+export class Section {
 
     @PrimaryGeneratedColumn()
     id: number
@@ -11,7 +11,7 @@ export class Section{
     @Column()
     name: string
 
-    @ManyToOne(()=>SchoolClass, (schoolClass) => schoolClass.id, { onUpdate:"CASCADE", onDelete: "SET NULL", nullable: true })
+    @ManyToOne(() => SchoolClass, (schoolClass) => schoolClass.id, { onUpdate: "CASCADE", onDelete: "SET NULL", nullable: true })
     schoolClass: SchoolClass
 
 }

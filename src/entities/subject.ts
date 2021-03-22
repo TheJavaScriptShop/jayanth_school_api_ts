@@ -1,9 +1,9 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn, JoinTable, ManyToOne} from "typeorm";
-import {Student} from '../entities/student'
-import {Teacher} from '../entities/teacher'
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn, JoinTable, ManyToOne } from "typeorm";
+import { Student } from '../entities/student'
+import { Teacher } from '../entities/teacher'
 
 @Entity('Subject')
-export class Subject{
+export class Subject {
 
     @PrimaryGeneratedColumn()
     id: number
@@ -11,10 +11,10 @@ export class Subject{
     @Column()
     name: string
 
-    @ManyToMany(()=> Student, (student)=>student)
+    @ManyToMany(() => Student, (student) => student)
     @JoinTable({ name: 'student_subject' })
     student: Student[]
 
-    @ManyToOne(()=>Teacher, (teacher)=>teacher.subject, { onUpdate: 'CASCADE',onDelete: 'SET NULL' ,nullable: true })
+    @ManyToOne(() => Teacher, (teacher) => teacher.subject, { onUpdate: 'CASCADE', onDelete: 'SET NULL', nullable: true })
     teacher: Teacher
 }

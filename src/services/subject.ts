@@ -1,23 +1,23 @@
-import {getManager , Repository} from 'typeorm'
+import { getManager, Repository } from 'typeorm'
 import { Subject } from '../entities/subject'
-import {Teacher} from '../entities/teacher'
+import { Teacher } from '../entities/teacher'
 
 
-export class SubjectService{
-    
+export class SubjectService {
+
     subjectrepository: Repository<Subject>
     teacherrepository: Repository<Teacher>
-    
-    constructor(){
+
+    constructor() {
         this.subjectrepository = getManager().getRepository(Subject);
         this.teacherrepository = getManager().getRepository(Teacher)
     }
-    
-    public async create(s: Partial<Subject>, teacherId: number){
-        
+
+    public async create(s: Partial<Subject>, teacherId: number) {
+
         const assignteacher = await this.teacherrepository.findOne({
             where: {
-                id:teacherId
+                id: teacherId
             }
         })
         const subject = await this.subjectrepository.create({
@@ -25,31 +25,31 @@ export class SubjectService{
             student: s.student,
             teacher: assignteacher
         })
-    
+
         return this.subjectrepository.save(subject);
     }
 
-    public async getSubjects(){
-       
-        const subjects = await this.subjectrepository.find({ relations: ["student",'teacher']});
-       
+    public async getSubjects() {
+
+        const subjects = await this.subjectrepository.find({ relations: ["student", 'teacher'] });
+
         return subjects
     }
 
-    public async getSubjectById(subjectId: number){
-        
+    public async getSubjectById(subjectId: number) {
+
         const subject = await this.subjectrepository.findOne({
             where: {
                 id: subjectId
             },
-            relations: ['student','teacher']
+            relations: ['student', 'teacher']
         })
-        
+
         return subject
     }
 
-    public async updateSubject(s: Partial<Subject>,teacherId: number){
-        
+    public async updateSubject(s: Partial<Subject>, teacherId: number) {
+
         const subject = await this.subjectrepository.findOne({
             where: {
                 id: s.id
@@ -60,26 +60,26 @@ export class SubjectService{
                 id: teacherId
             }
         })
-        
+
         subject.id = s.id;
         subject.name = s.name;
         subject.student = s.student;
         subject.teacher = assignteacher
-        
+
         return this.subjectrepository.save(subject);
     }
 
-    public async deleteSubject(subjectId: number){
-        
+    public async deleteSubject(subjectId: number) {
+
         const subject = await this.subjectrepository.findOne({
             where: {
                 id: subjectId
             }
         })
-        
-        if(!subject){
+
+        if (!subject) {
             throw new Error("There are no subject with this ID");
-        }else{
+        } else {
             this.subjectrepository.delete(subject)
         }
     }

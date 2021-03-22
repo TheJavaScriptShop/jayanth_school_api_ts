@@ -12,4 +12,4 @@ resultRoutes.get('/result/getall', ResultControllers.getResults)
 
 resultRoutes.delete('/result/delete', ResultControllers.deleteResult)
 
-export {resultRoutes}
+export { resultRoutes }

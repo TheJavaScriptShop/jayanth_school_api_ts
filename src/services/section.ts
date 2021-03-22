@@ -12,55 +12,55 @@ export class SectionService {
         this.sectionRepository = getManager().getRepository(Section)
     }
 
-    public async createSection(sec: Partial<Section>, clsId: number){
+    public async createSection(sec: Partial<Section>, clsId: number) {
 
         const cls = await this.classRepository.findOne({
             where: {
-                id:clsId
+                id: clsId
             }
         })
-        
-        if(!cls){
-            throw new Error("No Class was found with this ID");
-        }else{
-        const newSection = await this.sectionRepository.create({
-            id: sec.id,
-            name: sec.name,
-            schoolClass: cls
-        })
 
-        return this.sectionRepository.save(newSection)
+        if (!cls) {
+            throw new Error("No Class was found with this ID");
+        } else {
+            const newSection = await this.sectionRepository.create({
+                id: sec.id,
+                name: sec.name,
+                schoolClass: cls
+            })
+
+            return this.sectionRepository.save(newSection)
         }
     }
 
-    public async getOneSection(secId: number){
+    public async getOneSection(secId: number) {
 
         const sec = await this.sectionRepository.findOne({
             where: {
                 id: secId
-            },relations: ['schoolClass']
+            }, relations: ['schoolClass']
         })
-        if(!sec){
+        if (!sec) {
             throw new Error("No section not found");
-        }else{
+        } else {
             return sec
         }
 
     }
 
-    public async getSections(){
+    public async getSections() {
 
-        const sections = await this.sectionRepository.find({relations: ['schoolClass']})
+        const sections = await this.sectionRepository.find({ relations: ['schoolClass'] })
 
-        if(sections.length<=0){
+        if (sections.length <= 0) {
             throw new Error("No sections was found may be deleted");
-        }else{
+        } else {
             return sections
         }
 
     }
 
-    public async updateSection(section: Partial<Section>, clsId: number){
+    public async updateSection(section: Partial<Section>, clsId: number) {
 
         const updateSection = await this.sectionRepository.findOne({
             where: {
@@ -72,10 +72,10 @@ export class SectionService {
                 id: clsId
             }
         })
-        
-        if(!updateSection){
+
+        if (!updateSection) {
             throw new Error("Not Found");
-        }else{
+        } else {
             updateSection.name = section.name
             updateSection.id = section.id
             updateSection.schoolClass = cls
@@ -85,16 +85,16 @@ export class SectionService {
 
     }
 
-    public async deleteSection(secId: number){
+    public async deleteSection(secId: number) {
 
         const deletedSection = await this.sectionRepository.findOne({
             where: {
                 id: secId
             }
         })
-        if(!deletedSection){
+        if (!deletedSection) {
             throw new Error("No section found")
-        }else{
+        } else {
             return this.sectionRepository.delete(deletedSection)
         }
 

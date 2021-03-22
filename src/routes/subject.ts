@@ -12,4 +12,4 @@ subjectRoutes.put('/subject/update', SubjectControllers.updateSubject);
 
 subjectRoutes.delete('/subject/delete', SubjectControllers.deleteSubject);
 
-export {subjectRoutes}
+export { subjectRoutes }

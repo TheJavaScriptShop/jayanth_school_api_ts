@@ -4,4 +4,4 @@ const student_subject_router = new Router()
 
 student_subject_router.post('/assign', Student_Subject_Controller.assignSubject)
 
-export {student_subject_router}
+export { student_subject_router }

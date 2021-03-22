@@ -1,33 +1,33 @@
-import {Context} from "koa"
-import {ResultService} from '../services/result'
+import { Context } from "koa"
+import { ResultService } from '../services/result'
 
-export default class ResultControllers{
-    
-    public static async addResult(ctx:Context){
-        
+export default class ResultControllers {
+
+    public static async addResult(ctx: Context) {
+
         const resultService = new ResultService()
-        
+
         try {
             const { marks, student, exam } = ctx.request.body
-        
+
             ctx.checkBody('marks').notEmpty('marks cannot be empty')
             ctx.checkBody('student').notEmpty('student id cannot be empty').isInt('it should be number')
             ctx.checkBody('exam').notEmpty('it cannot be empty').isInt('it should be number')
-        
-            if(ctx.errors){
+
+            if (ctx.errors) {
                 ctx.body = ctx.errors
                 ctx.response.status = 400
-            }else{
-                const result = await resultService.createResult(student,exam,marks)
+            } else {
+                const result = await resultService.createResult(student, exam, marks)
                 ctx.body = result
             }
-        
+
         } catch (error) {
             ctx.body = error
         }
     }
 
-    public static async updateResult(ctx:Context){
+    public static async updateResult(ctx: Context) {
 
         const resultService = new ResultService();
 
@@ -39,12 +39,12 @@ export default class ResultControllers{
             ctx.checkBody('sId').optional().notEmpty('It cannot be empty').isInt('It should be a number')
             ctx.checkBody('marks').optional().notEmpty('It cannot be empty').isInt('It should be a number')
 
-            if(ctx.errors){
+            if (ctx.errors) {
                 ctx.body = ctx.errors;
                 ctx.response.status = 400;
-            }else{
+            } else {
                 const updatedStudent = await resultService.updateResult(resId, examId, sId, marks);
-                ctx.body = { message:"updated Successfully", updatedStudent }
+                ctx.body = { message: "updated Successfully", updatedStudent }
             }
 
         } catch (error) {
@@ -52,7 +52,7 @@ export default class ResultControllers{
         }
     }
 
-    public static async getResult(ctx:Context){
+    public static async getResult(ctx: Context) {
 
         const resultService = new ResultService()
 
@@ -60,10 +60,10 @@ export default class ResultControllers{
             const { resId } = ctx.request.body
 
             ctx.checkBody('resId').notEmpty('It cannot be empty').isInt('It should be a number')
-            if(ctx.errors){
+            if (ctx.errors) {
                 ctx.body = ctx.errors;
                 ctx.response.status = 400;
-            }else{
+            } else {
                 const result = await resultService.getOneResult(resId);
                 ctx.body = result
             }
@@ -73,20 +73,20 @@ export default class ResultControllers{
         }
     }
 
-    public static async getResults(ctx:Context){
+    public static async getResults(ctx: Context) {
 
         const resultService = new ResultService()
 
         try {
             const results = await resultService.getResults()
-            
-            ctx.body = { message:"Success" , results }
+
+            ctx.body = { message: "Success", results }
         } catch (error) {
-            ctx.body= { message:error.message }
+            ctx.body = { message: error.message }
         }
     }
 
-    public static async deleteResult(ctx:Context){
+    public static async deleteResult(ctx: Context) {
 
         const resultService = new ResultService()
 
@@ -94,16 +94,16 @@ export default class ResultControllers{
             const { resId } = ctx.request.body;
             ctx.checkBody('resId').notEmpty('This cannot be empty').isInt('It should be a number')
 
-            if(ctx.errors){
+            if (ctx.errors) {
                 ctx.body = ctx.errors;
                 ctx.response.status = 400;
-            }else{
+            } else {
                 const result = await resultService.deleteResult(resId);
-                ctx.body = { message:"deleted successfully" }
+                ctx.body = { message: "deleted successfully" }
             }
-            
+
         } catch (error) {
-            ctx.body = { message:error.message }
+            ctx.body = { message: error.message }
         }
     }
 }

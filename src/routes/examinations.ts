@@ -1,5 +1,5 @@
 import ExamControllers from '../controllers/examinations'
-import  Router from 'koa-router'
+import Router from 'koa-router'
 const examRoutes = new Router()
 
 examRoutes.post('/exam/create', ExamControllers.createExam);
@@ -12,4 +12,4 @@ examRoutes.get('/exam/getall', ExamControllers.getExams);
 
 examRoutes.delete('/exam/delete', ExamControllers.deleteExam);
 
-export {examRoutes}
+export { examRoutes }
