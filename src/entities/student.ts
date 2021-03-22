@@ -2,6 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMan
 import { IsEnum } from 'class-validator'
 import { Subject } from './subject'
 import { Result } from '../entities/result'
+import { Timestamps } from '../entities/timetamp';
 
 export enum Gender {
     'male',
@@ -10,7 +11,7 @@ export enum Gender {
 }
 
 @Entity('Student')
-export class Student {
+export class Student extends Timestamps {
 
     @PrimaryGeneratedColumn()
     id: number
