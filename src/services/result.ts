@@ -81,18 +81,26 @@ export class ResultService {
         return this.resultrepository.save(updateResult)
     }
 
-    public async getOneResult(resId: number) {
+    public async getOneResult(stId: number, exmId: number) {
 
-        const result = await this.resultrepository.findOne({
+        const student = await this.resultrepository.findOne({
             where: {
-                id: resId
-            }, relations: ['student', 'exam']
+                student: stId
+            },relations: ['student']
         })
-
-        if (!result) {
-            throw new Error("Result with this ID does not Exists");
-        } else {
-            return result
+        if(!student){
+            throw new Error("No student found with this ID");
+        }else{
+            const exm = await this.resultrepository.findOne({
+                where: {
+                    exam: exmId
+                }, relations: ['exam']
+            })
+            if(!exm){
+                throw new Error("No exam found with this name");
+            }else{
+                return {student, exm}
+            }
         }
     }
 

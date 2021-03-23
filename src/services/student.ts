@@ -1,5 +1,6 @@
 import { getManager, Repository } from 'typeorm'
 import { Student } from '../entities/student'
+import { Subject } from '../entities/subject'
 
 export enum Gender {
     'male',
@@ -10,9 +11,11 @@ export enum Gender {
 export class StudentService {
 
     studentRepository: Repository<Student>;
-
+    subjectRepository: Repository<Subject>;
+    
     constructor() {
         this.studentRepository = getManager().getRepository(Student)
+        this.subjectRepository = getManager().getRepository(Subject)
     }
 
     public async createStudent(s: Partial<Student>): Promise<Student> {

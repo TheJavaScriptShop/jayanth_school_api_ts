@@ -19,7 +19,7 @@ export class Examinations {
     @Column({ nullable: true })
     max_time: number
 
-    @ManyToOne(() => Teacher, (teacher) => teacher.examinations)
+    @ManyToOne(() => Teacher, (teacher) => teacher.examinations, { onDelete: "NO ACTION", onUpdate: "CASCADE" })
     teacher: Teacher
 
 }

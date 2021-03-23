@@ -16,6 +16,6 @@ export class Teacher {
     @OneToMany(() => Subject, (subject) => subject.teacher, { onUpdate: 'CASCADE' })
     subject: Subject[]
 
-    @OneToMany(() => Examinations, (examinations) => examinations.teacher)
+    @OneToMany(() => Examinations, (examinations) => examinations.teacher, { onUpdate: 'CASCADE' })
     examinations: Examinations[]
 }

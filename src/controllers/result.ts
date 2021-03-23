@@ -57,14 +57,15 @@ export default class ResultControllers {
         const resultService = new ResultService()
 
         try {
-            const { resId } = ctx.request.body
+            const { stId, exmId } = ctx.request.body
 
-            ctx.checkBody('resId').notEmpty('It cannot be empty').isInt('It should be a number')
+            ctx.checkBody('stId').notEmpty('It cannot be empty').isInt('It should be a number');
+            ctx.checkBody('exmId').notEmpty('It cannot be empty')
             if (ctx.errors) {
                 ctx.body = ctx.errors;
                 ctx.response.status = 400;
             } else {
-                const result = await resultService.getOneResult(resId);
+                const result = await resultService.getOneResult(stId, exmId);
                 ctx.body = result
             }
 
