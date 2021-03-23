@@ -3,6 +3,7 @@ import { IsEnum } from 'class-validator'
 import { Subject } from './subject'
 import { Result } from '../entities/result'
 import { Section } from '../entities/section'
+import { Timestamps } from '../entities/timetamp';
 
 export enum Gender {
     'male',
@@ -11,7 +12,7 @@ export enum Gender {
 }
 
 @Entity('Student')
-export class Student {
+export class Student extends Timestamps {
 
     @PrimaryGeneratedColumn()
     id: number
@@ -29,7 +30,4 @@ export class Student {
 
     @OneToMany(() => Result, (result) => result.marks, { onUpdate: 'CASCADE' })
     marks: Result
-
-    // @Column()
-    // section: string
 }
