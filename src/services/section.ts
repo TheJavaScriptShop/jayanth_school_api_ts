@@ -38,7 +38,7 @@ export class SectionService {
         const sec = await this.sectionRepository.findOne({
             where: {
                 id: secId
-            }, relations: ['schoolClass']
+            }, relations: ['schoolClass','student']
         })
         if (!sec) {
             throw new Error("No section not found");
@@ -50,7 +50,7 @@ export class SectionService {
 
     public async getSections() {
 
-        const sections = await this.sectionRepository.find({ relations: ['schoolClass'] })
+        const sections = await this.sectionRepository.find({ relations: ['schoolClass','student'] })
 
         if (sections.length <= 0) {
             throw new Error("No sections was found may be deleted");

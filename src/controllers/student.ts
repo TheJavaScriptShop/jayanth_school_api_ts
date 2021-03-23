@@ -10,14 +10,14 @@ export default class StudentController {
 
         try {
             ctx.checkBody('name').len(3, 20, "length of name should be min:3 and max:20 characters");
-            ctx.checkBody('subject').notEmpty('subject should not be empty');
             ctx.checkBody('gender').match(/m|M|male|Male|f|F|female|Female/, 'gender should be male or female');
+            ctx.checkBody('sectionId').notEmpty('section ID cannot be empty').isInt("It should be number")
 
             if (ctx.errors) {
                 ctx.body = ctx.errors;
                 ctx.response.status = 400;
             } else {
-                const student = await studentservice.createStudent(ctx.request.body)
+                const student = await studentservice.createStudent(ctx.request.body, ctx.request.body.sectionId)
                 ctx.body = student;
                 ctx.response.status = 200;
             }
@@ -32,17 +32,17 @@ export default class StudentController {
         const studentservice = new StudentService();
 
         try {
-            const { id, name, subject, gender } = ctx.request.body;
+            const { id, name, gender } = ctx.request.body;
 
             ctx.checkBody('name').len(3, 20, "student name should be minimum of 3 characters and max of 20 characters")
-            ctx.checkBody('subject').optional().notEmpty('subject cannot be empty');
+            ctx.checkBody('section').optional().notEmpty('subject cannot be empty');
             ctx.checkBody('gender').match(/m|M|male|Male|f|F|female|Female/, 'gender should be male or female');
 
             if (ctx.errors) {
                 ctx.body = ctx.errors
                 ctx.response.status = 400;
             } else {
-                const updatedStudent = await studentservice.updateStudent({ id, name, subject, gender });
+                const updatedStudent = await studentservice.updateStudent({ id, name, gender });
                 ctx.body = { student: updatedStudent, message: "updated Successfully" }
                 ctx.response.status = 200
             }
@@ -57,14 +57,16 @@ export default class StudentController {
         const studentservice = new StudentService();
 
         try {
-            ctx.checkBody('id').notEmpty('student Id should not be empty').isNumeric('id should be integer or number')
+            const { sId } = ctx.request.body
+
+            ctx.checkBody('sId').notEmpty('student Id should not be empty').isInt('id should be integer or number')
 
             if (ctx.errors) {
                 ctx.body = ctx.errors
                 ctx.response.status = 400
             }
             else {
-                const deleteStudent = await studentservice.deleteStudent(ctx.request.body)
+                const deleteStudent = await studentservice.deleteStudent(sId)
                 ctx.body = "deleted Successfully";
                 ctx.response.status = 200
             }
