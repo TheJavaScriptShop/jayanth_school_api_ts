@@ -15,6 +15,6 @@ export class Section {
     @ManyToOne(() => SchoolClass, (schoolClass) => schoolClass.id, { onUpdate: "CASCADE", onDelete: "SET NULL", nullable: true })
     schoolClass: SchoolClass
 
-    @OneToMany(()=>Student, (student)=> student.section, {onUpdate: "CASCADE", cascade: true})
+    @OneToMany(() => Student, (student) => student.section, { onUpdate: "CASCADE", cascade: true })
     student: Student[]
 }

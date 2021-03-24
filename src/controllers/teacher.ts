@@ -13,7 +13,6 @@ export default class TeacherControllers {
             ctx.checkBody('id').optional().notEmpty('teacher Id cannot be empty').isInt('subject id should be integer or number')
             ctx.checkBody('name').len(3, 20, 'teacher name should be min of 3 characters and max of 20 characters ')
             ctx.checkBody('gender').match(/m|M|Male|male|f|F|Female|female/, 'gender should be male or female').notEmpty('gender cannot be empty')
-            ctx.checkBody('subject').len(3, 20, 'subject name should be min of 3 characters and max of 10 characters')
 
             if (ctx.errors) {
                 ctx.body = ctx.errors
@@ -87,7 +86,6 @@ export default class TeacherControllers {
             ctx.checkBody('id').optional().notEmpty('teacher Id cannot be empty').isInt('subject id should be integer or number')
             ctx.checkBody('name').optional().len(3, 20, 'teacher name should be min of 3 characters and max of 20 characters ')
             ctx.checkBody('gender').optional().match(/m|M|Male|male|f|F|Female|female/, 'gender should be male or female').notEmpty('gender cannot be empty')
-            ctx.checkBody('subject').optional().len(3, 20, 'subject name should be min of 3 characters and max of 10 characters')
 
             if (ctx.errors) {
                 ctx.body = ctx.errors

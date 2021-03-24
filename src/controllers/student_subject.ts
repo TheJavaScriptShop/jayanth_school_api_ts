@@ -5,7 +5,7 @@ export default class StudentSubjectController {
 
     public static async assignSubject(ctx: Context) {
 
-        const student_subject_service = new StudentSubjectService()
+        const studentSubjectService = new StudentSubjectService()
 
         try {
             const { studentId } = ctx.request.body;
@@ -18,7 +18,7 @@ export default class StudentSubjectController {
                 ctx.body = ctx.errors;
                 ctx.response.status = 400;
             } else {
-                student_subject_service.assignSubject(studentId, subjectId)
+                studentSubjectService.assignSubject(studentId, subjectId)
                 ctx.body = { message: "successfuly assigned " }
             }
 

@@ -31,7 +31,7 @@ export class Student extends Timestamps {
     @OneToMany(() => Result, (result) => result.marks, { onUpdate: 'CASCADE' })
     marks: Result
 
-    @ManyToOne(()=> Section, {onDelete: "SET NULL", onUpdate: "CASCADE", nullable: true})
+    @ManyToOne(() => Section, { onDelete: "SET NULL", onUpdate: "CASCADE", nullable: true })
     @JoinColumn()
     section: Section
 }

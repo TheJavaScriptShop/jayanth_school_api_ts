@@ -4,24 +4,24 @@ import { Subject } from '../entities/subject'
 
 export class StudentSubjectService {
 
-    studentrepository: Repository<Student>
-    subjectrepository: Repository<Subject>
+    studentRepository: Repository<Student>
+    subjectRepository: Repository<Subject>
 
     constructor() {
-        this.studentrepository = getManager().getRepository(Student);
-        this.subjectrepository = getManager().getRepository(Subject);
+        this.studentRepository = getManager().getRepository(Student);
+        this.subjectRepository = getManager().getRepository(Subject);
     }
 
     public async assignSubject(studentId: number, subjectId: number) {
 
-        const student = await this.studentrepository.findOne({
+        const student = await this.studentRepository.findOne({
             where: {
                 id: studentId
             },
             relations: ["subject"]
         })
 
-        const subject = await this.subjectrepository.findOne({
+        const subject = await this.subjectRepository.findOne({
             where: {
                 id: subjectId
             }
@@ -29,7 +29,7 @@ export class StudentSubjectService {
 
         student.subject = [subject, ...student.subject]
 
-        return this.studentrepository.save(student);
+        return this.studentRepository.save(student);
     }
 
 }

@@ -33,16 +33,16 @@ export default class ClassController {
         const classService = new ClassService()
 
         try {
-            const { clsId } = ctx.request.body
+            const { classId } = ctx.request.body
 
-            ctx.checkBody('clsId').notEmpty("Please provide Class ID").isInt("class Id should be number")
+            ctx.checkBody('classId').notEmpty("Please provide Class ID").isInt("class Id should be number")
 
             if (ctx.errors) {
                 ctx.body = ctx.errors
                 ctx.response.status = 400
             } else {
-                const cls = await classService.getSingleClass(clsId)
-                ctx.body = { message: "Success", cls }
+                const singleClass = await classService.getSingleClass(classId)
+                ctx.body = { message: "Success", singleClass }
             }
 
         } catch (error) {
@@ -95,15 +95,15 @@ export default class ClassController {
         const classService = new ClassService()
 
         try {
-            const { clsId } = ctx.request.body
+            const { classId } = ctx.request.body
 
-            ctx.checkBody('clsId').notEmpty('Please Provide clsId')
+            ctx.checkBody('classId').notEmpty('Please Provide clsId')
 
             if (ctx.errors) {
                 ctx.body = ctx.errors
                 ctx.response.status = 400
             } else {
-                const deleteClass = await classService.deleteClass(clsId)
+                const deleteClass = await classService.deleteClass(classId)
                 ctx.body = { message: "deleted Successfully" }
             }
 

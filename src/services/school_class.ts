@@ -23,17 +23,17 @@ export class ClassService {
         return this.classRepository.save(newClass)
     }
 
-    public async getSingleClass(clsId: number) {
+    public async getSingleClass(classId: number) {
 
-        const cls = await this.classRepository.findOne({
+        const newClass = await this.classRepository.findOne({
             where: {
-                id: clsId
+                id: classId
             }
         })
-        if (!cls) {
+        if (!newClass) {
             throw new Error("No Class Found");
         } else {
-            return cls
+            return newClass
         }
 
     }
@@ -50,28 +50,28 @@ export class ClassService {
 
     }
 
-    public async updateClass(cls: Partial<SchoolClass>) {
+    public async updateClass(schoolClass: Partial<SchoolClass>) {
 
         const updateClass = await this.classRepository.findOne({
             where: {
-                id: cls.id
+                id: schoolClass.id
             }
         })
         if (!updateClass) {
             throw new Error("No class found");
         } else {
-            updateClass.className = cls.className
-            updateClass.section = cls.section
+            updateClass.className = schoolClass.className
+            updateClass.section = schoolClass.section
             return this.classRepository.save(updateClass)
         }
 
     }
 
-    public async deleteClass(clsId: number) {
+    public async deleteClass(classId: number) {
 
         const deleteClass = await this.classRepository.findOne({
             where: {
-                id: clsId
+                id: classId
             }
         })
 

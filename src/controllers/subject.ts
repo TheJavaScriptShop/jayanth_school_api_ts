@@ -5,7 +5,7 @@ export default class SubjectControllers {
 
     public static async createNewSubject(ctx: Context) {
 
-        const subjectservice = new SubjectService()
+        const subjectService = new SubjectService()
 
         try {
             const { name, student, teacherId } = ctx.request.body
@@ -18,7 +18,7 @@ export default class SubjectControllers {
                 ctx.body = ctx.errors
                 ctx.response.status = 400
             } else {
-                const subject = await subjectservice.create({ name, student }, teacherId);
+                const subject = await subjectService.create({ name, student }, teacherId);
                 ctx.body = subject;
                 ctx.response.status = 200
             }
@@ -30,10 +30,10 @@ export default class SubjectControllers {
 
     public static async getSubjects(ctx: Context) {
 
-        const subjectservice = new SubjectService()
+        const subjectService = new SubjectService()
 
         try {
-            const subjects = await subjectservice.getSubjects()
+            const subjects = await subjectService.getSubjects()
 
             if (subjects.length <= 0) {
                 ctx.body = { message: "There are no subjects" }
@@ -49,7 +49,7 @@ export default class SubjectControllers {
 
     public static async getSingleSubject(ctx: Context) {
 
-        const subjectservice = new SubjectService()
+        const subjectService = new SubjectService()
 
         try {
             ctx.checkBody('id').notEmpty('id cannot be empty').isInt('id should be int or number')
@@ -58,7 +58,7 @@ export default class SubjectControllers {
                 ctx.body = ctx.errors
                 ctx.response.status = 400
             } else {
-                const subject = await subjectservice.getSubjectById(ctx.request.body.id);
+                const subject = await subjectService.getSubjectById(ctx.request.body.id);
 
                 if (!subject) {
                     ctx.body = { message: "There is no subject with this ID" }
@@ -75,7 +75,7 @@ export default class SubjectControllers {
 
     public static async updateSubject(ctx: Context) {
 
-        const subjectservice = new SubjectService()
+        const subjectService = new SubjectService()
 
         try {
 
@@ -89,7 +89,7 @@ export default class SubjectControllers {
                 ctx.body = ctx.errors
                 ctx.response.status = 400
             } else {
-                const updatedSubject = await subjectservice.updateSubject({ id, name, student }, teacherId)
+                const updatedSubject = await subjectService.updateSubject({ id, name, student }, teacherId)
                 ctx.body = updatedSubject
                 ctx.response.status = 200
             }
@@ -101,7 +101,7 @@ export default class SubjectControllers {
 
     public static async deleteSubject(ctx: Context) {
 
-        const subjectservice = new SubjectService()
+        const subjectService = new SubjectService()
 
         try {
             // const id  = ctx.request.body;
@@ -112,7 +112,7 @@ export default class SubjectControllers {
                 ctx.response.status = 400
             }
             else {
-                const deletedSubject = await subjectservice.deleteSubject(ctx.request.body.id)
+                const deletedSubject = await subjectService.deleteSubject(ctx.request.body.id)
 
                 ctx.body = "deleted Successfully"
                 ctx.response.status = 200
