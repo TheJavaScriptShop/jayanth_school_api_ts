@@ -12,21 +12,21 @@ export class SectionService {
         this.sectionRepository = getManager().getRepository(Section)
     }
 
-    public async createSection(sec: Partial<Section>, clsId: number) {
+    public async createSection(section: Partial<Section>, classId: number) {
 
-        const cls = await this.classRepository.findOne({
+        const newClass = await this.classRepository.findOne({
             where: {
-                id: clsId
+                id: classId
             }
         })
 
-        if (!cls) {
+        if (!newClass) {
             throw new Error("No Class was found with this ID");
         } else {
             const newSection = await this.sectionRepository.create({
-                id: sec.id,
-                name: sec.name,
-                schoolClass: cls
+                id: section.id,
+                name: section.name,
+                schoolClass: newClass
             })
 
             return this.sectionRepository.save(newSection)
@@ -38,7 +38,7 @@ export class SectionService {
         const sec = await this.sectionRepository.findOne({
             where: {
                 id: secId
-            }, relations: ['schoolClass','student']
+            }, relations: ['schoolClass', 'student']
         })
         if (!sec) {
             throw new Error("No section not found");
@@ -50,7 +50,7 @@ export class SectionService {
 
     public async getSections() {
 
-        const sections = await this.sectionRepository.find({ relations: ['schoolClass','student'] })
+        const sections = await this.sectionRepository.find({ relations: ['schoolClass', 'student'] })
 
         if (sections.length <= 0) {
             throw new Error("No sections was found may be deleted");
@@ -89,11 +89,11 @@ export class SectionService {
 
     }
 
-    public async deleteSection(secId: number) {
+    public async deleteSection(sectionId: number) {
 
         const deletedSection = await this.sectionRepository.findOne({
             where: {
-                id: secId
+                id: sectionId
             }
         })
         if (!deletedSection) {

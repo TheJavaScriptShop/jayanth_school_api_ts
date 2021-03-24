@@ -32,18 +32,18 @@ export default class ResultControllers {
         const resultService = new ResultService();
 
         try {
-            const { resId, examId, sId, marks } = ctx.request.body;
+            const { resultId, examId, studentId, marks } = ctx.request.body;
 
-            ctx.checkBody('resId').optional().notEmpty('It cannot be empty').isInt('It should be a number')
+            ctx.checkBody('resultId').optional().notEmpty('It cannot be empty').isInt('It should be a number')
             ctx.checkBody('examId').optional().notEmpty('It cannot be empty').isInt('It should be a number')
-            ctx.checkBody('sId').optional().notEmpty('It cannot be empty').isInt('It should be a number')
+            ctx.checkBody('studentId').optional().notEmpty('It cannot be empty').isInt('It should be a number')
             ctx.checkBody('marks').optional().notEmpty('It cannot be empty').isInt('It should be a number')
 
             if (ctx.errors) {
                 ctx.body = ctx.errors;
                 ctx.response.status = 400;
             } else {
-                const updatedStudent = await resultService.updateResult(resId, examId, sId, marks);
+                const updatedStudent = await resultService.updateResult(resultId, examId, studentId, marks);
                 ctx.body = { message: "updated Successfully", updatedStudent }
             }
 
@@ -57,15 +57,15 @@ export default class ResultControllers {
         const resultService = new ResultService()
 
         try {
-            const { stId, exmId } = ctx.request.body
+            const { studentId, examId } = ctx.request.body
 
-            ctx.checkBody('stId').notEmpty('It cannot be empty').isInt('It should be a number');
-            ctx.checkBody('exmId').notEmpty('It cannot be empty')
+            ctx.checkBody('studentId').notEmpty('It cannot be empty').isInt('It should be a number');
+            ctx.checkBody('examId').notEmpty('It cannot be empty')
             if (ctx.errors) {
                 ctx.body = ctx.errors;
                 ctx.response.status = 400;
             } else {
-                const result = await resultService.getOneResult(stId, exmId);
+                const result = await resultService.getOneResult(studentId, examId);
                 ctx.body = result
             }
 
@@ -92,14 +92,14 @@ export default class ResultControllers {
         const resultService = new ResultService()
 
         try {
-            const { resId } = ctx.request.body;
-            ctx.checkBody('resId').notEmpty('This cannot be empty').isInt('It should be a number')
+            const { resultId } = ctx.request.body;
+            ctx.checkBody('resultId').notEmpty('This cannot be empty').isInt('It should be a number')
 
             if (ctx.errors) {
                 ctx.body = ctx.errors;
                 ctx.response.status = 400;
             } else {
-                const result = await resultService.deleteResult(resId);
+                const result = await resultService.deleteResult(resultId);
                 ctx.body = { message: "deleted successfully" }
             }
 

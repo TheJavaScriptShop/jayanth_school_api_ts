@@ -5,40 +5,40 @@ import { Teacher } from '../entities/teacher'
 
 export class SubjectService {
 
-    subjectrepository: Repository<Subject>
-    teacherrepository: Repository<Teacher>
+    subjectRepository: Repository<Subject>
+    teacherRepository: Repository<Teacher>
 
     constructor() {
-        this.subjectrepository = getManager().getRepository(Subject);
-        this.teacherrepository = getManager().getRepository(Teacher)
+        this.subjectRepository = getManager().getRepository(Subject);
+        this.teacherRepository = getManager().getRepository(Teacher)
     }
 
-    public async create(s: Partial<Subject>, teacherId: number) {
+    public async create(subject: Partial<Subject>, teacherId: number) {
 
-        const assignteacher = await this.teacherrepository.findOne({
+        const assignteacher = await this.teacherRepository.findOne({
             where: {
                 id: teacherId
             }
         })
-        const subject = await this.subjectrepository.create({
-            name: s.name,
-            student: s.student,
+        const newSubject = await this.subjectRepository.create({
+            name: subject.name,
+            student: subject.student,
             teacher: assignteacher
         })
 
-        return this.subjectrepository.save(subject);
+        return this.subjectRepository.save(newSubject);
     }
 
     public async getSubjects() {
 
-        const subjects = await this.subjectrepository.find({ relations: ["student", 'teacher'] });
+        const subjects = await this.subjectRepository.find({ relations: ["student", 'teacher'] });
 
         return subjects
     }
 
     public async getSubjectById(subjectId: number) {
 
-        const subject = await this.subjectrepository.findOne({
+        const subject = await this.subjectRepository.findOne({
             where: {
                 id: subjectId
             },
@@ -48,30 +48,34 @@ export class SubjectService {
         return subject
     }
 
-    public async updateSubject(s: Partial<Subject>, teacherId: number) {
+    public async updateSubject(subject: Partial<Subject>, teacherId: number) {
 
-        const subject = await this.subjectrepository.findOne({
+        const updatedSubject = await this.subjectRepository.findOne({
             where: {
-                id: s.id
+                id: subject.id
             }
         })
-        const assignteacher = await this.teacherrepository.findOne({
+        const assignTeacher = await this.teacherRepository.findOne({
             where: {
                 id: teacherId
             }
         })
+        if (!updatedSubject) {
+            throw new Error("Np subject found with this ID");
+        } else {
+            console.log(assignTeacher)
+            updatedSubject.id = subject.id;
+            updatedSubject.name = subject.name;
+            updatedSubject.student = subject.student;
+            updatedSubject.teacher = assignTeacher
 
-        subject.id = s.id;
-        subject.name = s.name;
-        subject.student = s.student;
-        subject.teacher = assignteacher
-
-        return this.subjectrepository.save(subject);
+            return this.subjectRepository.save(updatedSubject);
+        }
     }
 
     public async deleteSubject(subjectId: number) {
 
-        const subject = await this.subjectrepository.findOne({
+        const subject = await this.subjectRepository.findOne({
             where: {
                 id: subjectId
             }
@@ -80,7 +84,7 @@ export class SubjectService {
         if (!subject) {
             throw new Error("There are no subject with this ID");
         } else {
-            this.subjectrepository.delete(subject)
+            this.subjectRepository.delete(subject)
         }
     }
 }

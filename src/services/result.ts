@@ -5,27 +5,27 @@ import { Examinations } from '../entities/examinations'
 
 export class ResultService {
 
-    resultrepository: Repository<Result>
-    studentrepository: Repository<Student>
-    examrepository: Repository<Examinations>
+    resultRepository: Repository<Result>
+    studentRepository: Repository<Student>
+    examRepository: Repository<Examinations>
 
     constructor() {
-        this.resultrepository = getManager().getRepository(Result)
-        this.studentrepository = getManager().getRepository(Student)
-        this.examrepository = getManager().getRepository(Examinations)
+        this.resultRepository = getManager().getRepository(Result)
+        this.studentRepository = getManager().getRepository(Student)
+        this.examRepository = getManager().getRepository(Examinations)
     }
 
-    public async createResult(sid: number, examId: number, marks: number) {
+    public async createResult(studentId: number, examId: number, marks: number) {
 
-        const student = await this.studentrepository.findOne({
+        const student = await this.studentRepository.findOne({
             where: {
-                id: sid
+                id: studentId
             }
         })
         if (!student) {
             throw new Error("NO student Found with this ID");
         } else {
-            const exam = await this.examrepository.findOne({
+            const exam = await this.examRepository.findOne({
                 where: {
                     id: examId
                 }
@@ -33,28 +33,28 @@ export class ResultService {
             if (!exam) {
                 throw new Error('No exam Found')
             } else {
-                const result = await this.resultrepository.create({
+                const result = await this.resultRepository.create({
                     marks: marks,
                     student: student,
                     exam: exam
                 })
 
-                return this.resultrepository.save(result)
+                return this.resultRepository.save(result)
             }
         }
     }
 
-    public async updateResult(resId: number, examId: number, sId: number, marks: number) {
+    public async updateResult(resultId: number, examId: number, studentId: number, marks: number) {
 
-        const updateResult = await this.resultrepository.findOne({
-            id: resId
+        const updateResult = await this.resultRepository.findOne({
+            id: resultId
         })
 
         if (!updateResult) {
             throw new Error("result with this ID doesnot Exist");
         }
 
-        const exam = await this.examrepository.findOne({
+        const exam = await this.examRepository.findOne({
             where: {
                 id: examId
             }
@@ -64,9 +64,9 @@ export class ResultService {
             throw new Error("Exam with this ID does not exist")
         }
 
-        const student = await this.studentrepository.findOne({
+        const student = await this.studentRepository.findOne({
             where: {
-                id: sId
+                id: studentId
             }
         })
 
@@ -78,35 +78,35 @@ export class ResultService {
             updateResult.exam = exam,
             updateResult.student = student
 
-        return this.resultrepository.save(updateResult)
+        return this.resultRepository.save(updateResult)
     }
 
-    public async getOneResult(stId: number, exmId: number) {
+    public async getOneResult(studentId: number, examId: number) {
 
-        const student = await this.resultrepository.findOne({
+        const student = await this.resultRepository.findOne({
             where: {
-                student: stId
-            },relations: ['student']
+                student: studentId
+            }, relations: ['student']
         })
-        if(!student){
+        if (!student) {
             throw new Error("No student found with this ID");
-        }else{
-            const exm = await this.resultrepository.findOne({
+        } else {
+            const exam = await this.resultRepository.findOne({
                 where: {
-                    exam: exmId
+                    exam: examId
                 }, relations: ['exam']
             })
-            if(!exm){
+            if (!exam) {
                 throw new Error("No exam found with this name");
-            }else{
-                return {student, exm}
+            } else {
+                return { student, exam }
             }
         }
     }
 
     public async getResults() {
 
-        const results = await this.resultrepository.find({ relations: ['student', 'exam'] })
+        const results = await this.resultRepository.find({ relations: ['student', 'exam'] })
 
         if (results.length <= 0) {
             throw new Error("No results found");
@@ -115,11 +115,11 @@ export class ResultService {
         }
     }
 
-    public async deleteResult(resId: number) {
+    public async deleteResult(resultId: number) {
 
-        const result = await this.resultrepository.findOne({
+        const result = await this.resultRepository.findOne({
             where: {
-                id: resId
+                id: resultId
             }
         })
 
@@ -127,7 +127,7 @@ export class ResultService {
             throw new Error("No result found");
 
         } else {
-            return this.resultrepository.delete(result)
+            return this.resultRepository.delete(result)
         }
 
     }

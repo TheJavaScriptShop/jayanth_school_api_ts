@@ -6,7 +6,7 @@ export default class StudentController {
 
     public static async createNewStudent(ctx: Context) {
 
-        const studentservice = new StudentService();
+        const studentService = new StudentService();
 
         try {
             ctx.checkBody('name').len(3, 20, "length of name should be min:3 and max:20 characters");
@@ -17,7 +17,7 @@ export default class StudentController {
                 ctx.body = ctx.errors;
                 ctx.response.status = 400;
             } else {
-                const student = await studentservice.createStudent(ctx.request.body, ctx.request.body.sectionId)
+                const student = await studentService.createStudent(ctx.request.body, ctx.request.body.sectionId)
                 ctx.body = student;
                 ctx.response.status = 200;
             }
@@ -29,7 +29,7 @@ export default class StudentController {
 
     public static async updateStudent(ctx: Context) {
 
-        const studentservice = new StudentService();
+        const studentService = new StudentService();
 
         try {
             const { id, name, gender } = ctx.request.body;
@@ -42,7 +42,7 @@ export default class StudentController {
                 ctx.body = ctx.errors
                 ctx.response.status = 400;
             } else {
-                const updatedStudent = await studentservice.updateStudent({ id, name, gender });
+                const updatedStudent = await studentService.updateStudent({ id, name, gender });
                 ctx.body = { student: updatedStudent, message: "updated Successfully" }
                 ctx.response.status = 200
             }
@@ -54,19 +54,19 @@ export default class StudentController {
 
     public static async deleteStudent(ctx: Context) {
 
-        const studentservice = new StudentService();
+        const studentService = new StudentService();
 
         try {
-            const { sId } = ctx.request.body
+            const { studentId } = ctx.request.body
 
-            ctx.checkBody('sId').notEmpty('student Id should not be empty').isInt('id should be integer or number')
+            ctx.checkBody('studentId').notEmpty('student Id should not be empty').isInt('id should be integer or number')
 
             if (ctx.errors) {
                 ctx.body = ctx.errors
                 ctx.response.status = 400
             }
             else {
-                const deleteStudent = await studentservice.deleteStudent(sId)
+                const deleteStudent = await studentService.deleteStudent(studentId)
                 ctx.body = "deleted Successfully";
                 ctx.response.status = 200
             }
@@ -78,10 +78,10 @@ export default class StudentController {
 
     public static async getStudents(ctx: Context) {
 
-        const studentservice = new StudentService();
+        const studentService = new StudentService();
 
         try {
-            const students = await studentservice.getAllStudents()
+            const students = await studentService.getAllStudents()
 
             if (students.length <= 0) {
                 ctx.body = { message: "There are no students " }
@@ -97,7 +97,7 @@ export default class StudentController {
 
     public static async getOneStudent(ctx: Context) {
 
-        const studentservice = new StudentService();
+        const studentService = new StudentService();
 
         try {
             const id = ctx.request.body
@@ -107,7 +107,7 @@ export default class StudentController {
                 ctx.body = ctx.errors
                 ctx.response.status = 400
             } else {
-                const student = await studentservice.getStudentById(id);
+                const student = await studentService.getStudentById(id);
 
                 if (!student) {
                     ctx.body = { message: " There is no student with this id " }

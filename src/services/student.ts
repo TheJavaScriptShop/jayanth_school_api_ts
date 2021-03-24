@@ -21,40 +21,40 @@ export class StudentService {
         this.sectionRepository = getManager().getRepository(Section)
     }
 
-    public async createStudent(student: Partial<Student>, sectionId: number){
+    public async createStudent(student: Partial<Student>, sectionId: number) {
 
         const section = await this.sectionRepository.findOne({
             where: {
                 id: sectionId
             }
         })
-        if(!section){
+        if (!section) {
             throw new Error("No section Found");
-        }else{
+        } else {
             const newStudent = await this.studentRepository.create({
                 name: student.name,
                 gender: student.gender,
                 section: section
             })
 
-            return this.studentRepository.save(newStudent);   
+            return this.studentRepository.save(newStudent);
         }
     }
 
-    public async updateStudent(s: Partial<Student>) {
+    public async updateStudent(student: Partial<Student>) {
 
-        const student = await this.studentRepository.findOne({
+        const updatedStudent = await this.studentRepository.findOne({
             where: {
-                id: s.id
+                id: student.id
             }
         })
 
-        student.id = s.id
-        student.name = s.name;
-        student.subject = s.subject;
-        student.gender = s.gender;
+        updatedStudent.id = student.id
+        updatedStudent.name = student.name;
+        updatedStudent.subject = student.subject;
+        updatedStudent.gender = student.gender;
 
-        return this.studentRepository.save(student)
+        return this.studentRepository.save(updatedStudent)
     }
 
     public async deleteStudent(sId: number) {
@@ -74,7 +74,7 @@ export class StudentService {
 
     public async getAllStudents() {
 
-        const students = await this.studentRepository.find({ relations: ["subject","section"] });
+        const students = await this.studentRepository.find({ relations: ["subject", "section", "section.schoolClass"] });
 
         return students;
     }
