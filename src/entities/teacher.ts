@@ -13,9 +13,9 @@ export class Teacher {
     @Column()
     gender: string
 
-    @OneToMany(() => Subject, (subject) => subject.teacher, { onUpdate: 'CASCADE' })
+    @OneToMany(() => Subject, (subject) => subject.teacher, { onUpdate: 'CASCADE', cascade: true })
     subject: Subject[]
 
-    @OneToMany(() => Examinations, (examinations) => examinations.teacher)
+    @OneToMany(() => Examinations, (examinations) => examinations.teacher, { onUpdate: 'CASCADE', cascade: true })
     examinations: Examinations[]
 }

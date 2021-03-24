@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany, OneToOne, JoinColumn, ManyToOne } from 'typeorm'
 import { IsEnum } from 'class-validator'
 import { Subject } from './subject'
+import { Section } from './section'
 import { Result } from '../entities/result'
 import { Timestamps } from '../entities/timetamp';
 
@@ -29,4 +30,8 @@ export class Student extends Timestamps {
 
     @OneToMany(() => Result, (result) => result.marks, { onUpdate: 'CASCADE' })
     marks: Result
+
+    @ManyToOne(()=> Section, {onDelete: "SET NULL", onUpdate: "CASCADE", nullable: true})
+    @JoinColumn()
+    section: Section
 }
