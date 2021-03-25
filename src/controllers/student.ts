@@ -23,7 +23,7 @@ export default class StudentController {
             }
 
         } catch (error) {
-            console.log(error)
+            ctx.body = { message: error.message }
         }
     }
 
@@ -48,7 +48,7 @@ export default class StudentController {
             }
 
         } catch (error) {
-            console.log(error)
+            ctx.body = { message: error.message }
         }
     }
 
@@ -91,7 +91,7 @@ export default class StudentController {
             }
 
         } catch (error) {
-            console.log(error)
+            ctx.body = { message: error.message }
         }
     }
 
@@ -120,7 +120,7 @@ export default class StudentController {
             }
 
         } catch (error) {
-            console.log(error)
+            ctx.body = { message: error.message }
         }
     }
 

@@ -1,8 +1,9 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Section } from "../entities/section";
+import { Timestamps } from '../entities/timetamp'
 
 @Entity('school_class')
-export class SchoolClass {
+export class SchoolClass extends Timestamps {
 
     @PrimaryGeneratedColumn()
     id: number

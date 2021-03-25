@@ -24,7 +24,7 @@ export default class SubjectControllers {
             }
 
         } catch (error) {
-            console.log(error)
+            ctx.body = { message: error.message }
         }
     }
 
@@ -43,7 +43,7 @@ export default class SubjectControllers {
             }
 
         } catch (error) {
-            console.log(error)
+            ctx.body = { message: error.message }
         }
     }
 
@@ -69,7 +69,7 @@ export default class SubjectControllers {
             }
 
         } catch (error) {
-            console.log(error)
+            ctx.body = { message: error.message }
         }
     }
 
@@ -95,7 +95,7 @@ export default class SubjectControllers {
             }
 
         } catch (error) {
-            console.log(error)
+            ctx.body = { message: error.message }
         }
     }
 
