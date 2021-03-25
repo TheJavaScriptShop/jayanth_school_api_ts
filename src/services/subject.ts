@@ -33,7 +33,12 @@ export class SubjectService {
 
         const subjects = await this.subjectRepository.find({ relations: ["student", 'teacher'] });
 
-        return subjects
+        if(subjects.length<=0){
+            throw new Error("No subjects Found");
+        }else{
+            return subjects
+        }
+
     }
 
     public async getSubjectById(subjectId: number) {
@@ -61,9 +66,8 @@ export class SubjectService {
             }
         })
         if (!updatedSubject) {
-            throw new Error("Np subject found with this ID");
+            throw new Error("No subject found with this ID");
         } else {
-            console.log(assignTeacher)
             updatedSubject.id = subject.id;
             updatedSubject.name = subject.name;
             updatedSubject.student = subject.student;

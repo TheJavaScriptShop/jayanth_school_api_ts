@@ -48,13 +48,16 @@ export class StudentService {
                 id: student.id
             }
         })
+        if(!updatedStudent){
+            throw new Error("No Student found with this ID");
+        }else{
+            updatedStudent.id = student.id
+            updatedStudent.name = student.name;
+            updatedStudent.subject = student.subject;
+            updatedStudent.gender = student.gender;
 
-        updatedStudent.id = student.id
-        updatedStudent.name = student.name;
-        updatedStudent.subject = student.subject;
-        updatedStudent.gender = student.gender;
-
-        return this.studentRepository.save(updatedStudent)
+            return this.studentRepository.save(updatedStudent)
+        }
     }
 
     public async deleteStudent(sId: number) {
@@ -76,7 +79,12 @@ export class StudentService {
 
         const students = await this.studentRepository.find({ relations: ["subject", "section", "section.schoolClass"] });
 
-        return students;
+        if(students.length<=0){
+            throw new Error("There are no students");
+        }else{
+            return students;
+        }
+
     }
 
     public async getStudentById(s: Partial<Student>) {
@@ -87,7 +95,12 @@ export class StudentService {
             },
             relations: ["subject"]
         })
+        
+        if(!student){
+            throw new Error("No student found with this ID");
+        }else{
+            return student;
+        }
 
-        return student;
     }
 }
