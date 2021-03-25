@@ -1,9 +1,10 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Student } from '../entities/student'
 import { Examinations } from '../entities/examinations'
+import { Timestamps } from '../entities/timetamp'
 
 @Entity('result')
-export class Result {
+export class Result extends Timestamps {
 
     @PrimaryGeneratedColumn()
     id: number
