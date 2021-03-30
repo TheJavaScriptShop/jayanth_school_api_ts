@@ -17,6 +17,9 @@ export class Student extends Timestamps {
     @PrimaryGeneratedColumn()
     id: number
 
+    @Column({ nullable: false, unique: true })
+    enrollmentId: string
+
     @Column()
     name: string
 

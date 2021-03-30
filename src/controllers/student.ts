@@ -9,6 +9,7 @@ export default class StudentController {
         const studentService = new StudentService();
 
         try {
+            ctx.checkBody('enrollmentId').notEmpty("please provide Enrollment ID of the student")
             ctx.checkBody('name').len(3, 20, "length of name should be min:3 and max:20 characters");
             ctx.checkBody('gender').match(/m|M|male|Male|f|F|female|Female/, 'gender should be male or female');
             ctx.checkBody('sectionId').notEmpty('section ID cannot be empty').isInt("It should be number")

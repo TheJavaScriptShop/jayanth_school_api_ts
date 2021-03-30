@@ -8,6 +8,8 @@ import { examRoutes } from './routes/examinations'
 import { resultRoutes } from './routes/result'
 import { classRoutes } from './routes/school_class'
 import { sectionRoutes } from './routes/section'
+import { archiveRoutes } from './routes/archive'
+import { academicYearRoutes } from './routes/academicYear'
 import path from 'path'
 
 const app = new koa()
@@ -24,6 +26,8 @@ app.use(examRoutes.routes());
 app.use(resultRoutes.routes());
 app.use(classRoutes.routes());
 app.use(sectionRoutes.routes());
+app.use(archiveRoutes.routes());
+app.use(academicYearRoutes.routes());
 
 createConnection({
     type: 'postgres',
