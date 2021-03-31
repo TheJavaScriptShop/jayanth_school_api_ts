@@ -52,9 +52,9 @@ export class StudentService {
                 id: student.id
             }
         })
-        if(!updatedStudent){
+        if (!updatedStudent) {
             throw new Error("No Student found with this ID");
-        }else{
+        } else {
             updatedStudent.enrollmentId = student.enrollmentId
             updatedStudent.name = student.name;
             updatedStudent.subject = student.subject;
@@ -64,11 +64,11 @@ export class StudentService {
         }
     }
 
-    public async deleteStudent(sId: number) {
+    public async deleteStudent(studentId: number) {
 
         const student = await this.studentRepository.findOne({
             where: {
-                id: sId
+                enrollmentId: studentId
             }
         })
 
@@ -83,9 +83,9 @@ export class StudentService {
 
         const students = await this.studentRepository.find({ relations: ["subject", "section", "section.schoolClass"] });
 
-        if(students.length<=0){
+        if (students.length <= 0) {
             throw new Error("There are no students");
-        }else{
+        } else {
             return students;
         }
 
@@ -99,10 +99,10 @@ export class StudentService {
             },
             relations: ["subject", "section", "section.schoolClass"]
         })
-        
-        if(!student){
+
+        if (!student) {
             throw new Error("No student found with this ID");
-        }else{
+        } else {
             return student;
         }
 

@@ -33,9 +33,9 @@ export class SubjectService {
 
         const subjects = await this.subjectRepository.find({ relations: ["student", 'teacher'] });
 
-        if(subjects.length<=0){
+        if (subjects.length <= 0) {
             throw new Error("No subjects Found");
-        }else{
+        } else {
             return subjects
         }
 

@@ -9,7 +9,7 @@ export class AcademicYearServices {
         this.academicYearRepository = getManager().getRepository(AcademicYear)
     }
 
-    public async createYear(label: string){
+    public async createYear(label: string) {
 
         const newYear = await this.academicYearRepository.create({
             label: label

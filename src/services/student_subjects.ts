@@ -12,11 +12,11 @@ export class StudentSubjectService {
         this.subjectRepository = getManager().getRepository(Subject);
     }
 
-    public async assignSubject(studentId: number, subjectId: number) {
+    public async assignSubject(studentId: string, subjectId: number) {
 
         const student = await this.studentRepository.findOne({
             where: {
-                id: studentId
+                enrollmentId: studentId
             },
             relations: ["subject"]
         })

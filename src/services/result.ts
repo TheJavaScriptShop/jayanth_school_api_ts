@@ -15,11 +15,11 @@ export class ResultService {
         this.examRepository = getManager().getRepository(Examinations)
     }
 
-    public async createResult(studentId: number, examId: number, marks: number) {
+    public async createResult(studentId: string, examId: number, marks: number) {
 
         const student = await this.studentRepository.findOne({
             where: {
-                id: studentId
+                enrollmentId: studentId
             }
         })
         if (!student) {
@@ -35,7 +35,7 @@ export class ResultService {
             } else {
                 const result = await this.resultRepository.create({
                     marks: marks,
-                    student: student,
+                    student: { id: student.id },
                     exam: exam
                 })
 
@@ -127,7 +127,7 @@ export class ResultService {
             throw new Error("No result found");
 
         } else {
-            return this.resultRepository.delete(result)
+            return this.resultRepository.delete(result.id)
         }
 
     }

@@ -11,7 +11,7 @@ export default class ResultControllers {
             const { marks, studentId, examId } = ctx.request.body
 
             ctx.checkBody('marks').notEmpty('marks cannot be empty')
-            ctx.checkBody('studentId').notEmpty('student id cannot be empty').isInt('it should be number')
+            ctx.checkBody('studentId').notEmpty('student id cannot be empty')
             ctx.checkBody('examId').notEmpty('it cannot be empty').isInt('it should be number')
 
             if (ctx.errors) {
