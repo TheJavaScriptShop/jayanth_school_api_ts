@@ -78,7 +78,7 @@ export class ClassService {
         if (!deleteClass) {
             throw new Error("No Class Found may be deleted already");
         } else {
-            return this.classRepository.delete(deleteClass)
+            return this.classRepository.delete(deleteClass.id)
         }
 
     }

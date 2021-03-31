@@ -192,9 +192,9 @@ export class ArchiveServices {
     public async archive(academicYearId) {
 
         this.moveClass(academicYearId)
-        this.moveSection(academicYearId)
+       await this.moveSection(academicYearId)
         this.moveStudent(academicYearId)
-        this.moveTeacher(academicYearId)
+       await this.moveTeacher(academicYearId)
         this.moveSubject(academicYearId)
         this.moveExaminations(academicYearId)
         this.moveResults(academicYearId)
