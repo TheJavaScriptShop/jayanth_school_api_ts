@@ -1,8 +1,8 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany, OneToOne, JoinColumn, ManyToOne } from 'typeorm'
 import { IsEnum } from 'class-validator'
-import { Subject_Archive } from './subject_archive'
-import { Section_Archive } from './section_archive'
-import { Result_Archive } from '../entities/result_archive'
+import { SubjectArchive } from './subject_archive'
+import { SectionArchive } from './section_archive'
+import { ResultArchive } from '../entities/result_archive'
 import { Timestamps } from '../entities/timetamp';
 import { AcademicYear } from "./academicYear"
 
@@ -13,7 +13,7 @@ export enum Gender {
 }
 
 @Entity('Student_Archive')
-export class Student_Archive extends Timestamps {
+export class StudentArchive extends Timestamps {
 
     @PrimaryGeneratedColumn()
     id: number
@@ -24,20 +24,20 @@ export class Student_Archive extends Timestamps {
     @Column()
     name: string
 
-    @ManyToMany(() => Subject_Archive, (subject_archive) => subject_archive)
+    @ManyToMany(() => SubjectArchive, (subjectArchive) => subjectArchive)
     @JoinTable({ name: 'Student_Subject_Archive' })
-    subject: Subject_Archive[]
+    subject: SubjectArchive[]
 
     @IsEnum(Gender)
     @Column()
     gender: string
 
-    @OneToMany(() => Result_Archive, (result_archive) => result_archive.marks, { onUpdate: 'CASCADE' })
-    marks: Result_Archive
+    @OneToMany(() => ResultArchive, (resultArchive) => resultArchive.marks, { onUpdate: 'CASCADE' })
+    marks: ResultArchive
 
-    @ManyToOne(() => Section_Archive, { onDelete: "SET NULL", onUpdate: "CASCADE", nullable: true })
+    @ManyToOne(() => SectionArchive, { onDelete: "SET NULL", onUpdate: "CASCADE", nullable: true })
     @JoinColumn()
-    section: Section_Archive
+    section: SectionArchive
 
     @ManyToOne(()=> AcademicYear, (academicYear)=>academicYear)
     academicYear: AcademicYear

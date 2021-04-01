@@ -1,55 +1,55 @@
 import { Repository, getManager } from "typeorm";
 import { Student } from "../entities/student";
-import { Student_Archive } from "../entities/student_archive"
+import { StudentArchive } from "../entities/student_archive"
 import { Section } from '../entities/section'
-import { Section_Archive } from '../entities/section_archive'
-import { SchoolClass_Archive } from "../entities/school_class_archive"
+import { SectionArchive } from '../entities/section_archive'
+import { SchoolClassArchive } from "../entities/school_class_archive"
 import { SchoolClass } from "../entities/school_class"
 import { Examinations } from "../entities/examinations"
-import { Examinations_Archive } from "../entities/examination_archive"
+import { ExaminationsArchive } from "../entities/examination_archive"
 import { Teacher } from "../entities/teacher"
-import { Teacher_Archive } from "../entities/teacher_archive"
+import { TeacherArchive } from "../entities/teacher_archive"
 import { Subject } from "../entities/subject"
-import { Subject_Archive } from "../entities/subject_archive"
+import { SubjectArchive } from "../entities/subject_archive"
 import { Result } from "../entities/result"
-import { Result_Archive } from "../entities/result_archive"
+import { ResultArchive } from "../entities/result_archive"
 import { AcademicYear } from '../entities/academicYear'
 
 export class ArchiveServices {
 
     studentRepository: Repository<Student>
-    studentArchiveRepository: Repository<Student_Archive>
+    studentArchiveRepository: Repository<StudentArchive>
     sectionRepository: Repository<Section>
-    sectionArchiveRepository: Repository<Section_Archive>
+    sectionArchiveRepository: Repository<SectionArchive>
     academicYearRepository: Repository<AcademicYear>
     examinationsRepository: Repository<Examinations>
     schoolClassRepository: Repository<SchoolClass>
     teacherRepository: Repository<Teacher>
     subjectRepository: Repository<Subject>
     resultRepository: Repository<Result>
-    schoolClassArchiveRepository: Repository<SchoolClass_Archive>
-    examinationArchiveRepository: Repository<Examinations_Archive>
-    teacherArchiveRepository: Repository<Teacher_Archive>
-    subjectArchiveRepository: Repository<Subject_Archive>
-    resultArchiveRepository: Repository<Result_Archive>
+    schoolClassArchiveRepository: Repository<SchoolClassArchive>
+    examinationArchiveRepository: Repository<ExaminationsArchive>
+    teacherArchiveRepository: Repository<TeacherArchive>
+    subjectArchiveRepository: Repository<SubjectArchive>
+    resultArchiveRepository: Repository<ResultArchive>
 
 
     constructor() {
         this.studentRepository = getManager().getRepository(Student)
-        this.studentArchiveRepository = getManager().getRepository(Student_Archive)
+        this.studentArchiveRepository = getManager().getRepository(StudentArchive)
         this.sectionRepository = getManager().getRepository(Section)
-        this.sectionArchiveRepository = getManager().getRepository(Section_Archive)
+        this.sectionArchiveRepository = getManager().getRepository(SectionArchive)
         this.academicYearRepository = getManager().getRepository(AcademicYear)
         this.examinationsRepository = getManager().getRepository(Examinations)
         this.schoolClassRepository = getManager().getRepository(SchoolClass)
         this.teacherRepository = getManager().getRepository(Teacher)
         this.subjectRepository = getManager().getRepository(Subject)
         this.resultRepository = getManager().getRepository(Result)
-        this.schoolClassArchiveRepository = getManager().getRepository(SchoolClass_Archive)
-        this.examinationArchiveRepository = getManager().getRepository(Examinations_Archive)
-        this.teacherArchiveRepository = getManager().getRepository(Teacher_Archive)
-        this.subjectArchiveRepository = getManager().getRepository(Subject_Archive)
-        this.resultArchiveRepository = getManager().getRepository(Result_Archive)
+        this.schoolClassArchiveRepository = getManager().getRepository(SchoolClassArchive)
+        this.examinationArchiveRepository = getManager().getRepository(ExaminationsArchive)
+        this.teacherArchiveRepository = getManager().getRepository(TeacherArchive)
+        this.subjectArchiveRepository = getManager().getRepository(SubjectArchive)
+        this.resultArchiveRepository = getManager().getRepository(ResultArchive)
     }
 
     public async moveStudent(academicYearId: number) {
@@ -191,13 +191,13 @@ export class ArchiveServices {
 
     public async archive(academicYearId) {
 
-        this.moveClass(academicYearId)
-       await this.moveSection(academicYearId)
-        this.moveStudent(academicYearId)
-       await this.moveTeacher(academicYearId)
-        this.moveSubject(academicYearId)
-        this.moveExaminations(academicYearId)
-        this.moveResults(academicYearId)
+        await this.moveClass(academicYearId)
+        await this.moveSection(academicYearId)
+        await this.moveStudent(academicYearId)
+        await this.moveTeacher(academicYearId)
+        await this.moveSubject(academicYearId)
+        await this.moveExaminations(academicYearId)
+        await this.moveResults(academicYearId)
 
     }
 

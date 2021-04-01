@@ -40,10 +40,10 @@ export class ExamService {
         }
         const exam = await this.examRespository.create({
             id: examinations.id,
-            exam_name: examinations.exam_name,
-            subject_name: subject.name,
-            total_marks: examinations.total_marks,
-            max_time: examinations.max_time,
+            examName: examinations.examName,
+            subjectName: subject.name,
+            totalMarks: examinations.totalMarks,
+            maxTime: examinations.maxTime,
             teacher: assignTeacher
         })
 
@@ -71,10 +71,10 @@ export class ExamService {
         if (!updateExam || !subject || !teacher) {
             throw new Error(`Not found`);
         } else {
-            updateExam.exam_name = exam.exam_name
-            updateExam.subject_name = subject.name
-            updateExam.total_marks = exam.total_marks
-            updateExam.max_time = exam.max_time
+            updateExam.examName = exam.examName
+            updateExam.subjectName = subject.name
+            updateExam.totalMarks = exam.totalMarks
+            updateExam.maxTime = exam.maxTime
             updateExam.teacher = teacher
         }
         return this.examRespository.save(updateExam)
@@ -116,7 +116,7 @@ export class ExamService {
         if (!exam) {
             throw new Error("Exam not found may be deleted");
         } else {
-            return this.examRespository.delete(exam);
+            return this.examRespository.delete(exam.id);
         }
     }
 }

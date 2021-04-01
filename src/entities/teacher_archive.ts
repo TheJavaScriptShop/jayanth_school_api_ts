@@ -1,11 +1,11 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Subject_Archive } from '../entities/subject_archive'
+import { SubjectArchive } from '../entities/subject_archive'
 import { Timestamps } from '../entities/timetamp'
 import { AcademicYear } from "./academicYear"
-import { Examinations_Archive } from "./examination_archive";
+import { ExaminationsArchive } from "./examination_archive";
 
 @Entity('Teacher_Archive')
-export class Teacher_Archive extends Timestamps {
+export class TeacherArchive extends Timestamps {
 
     @PrimaryGeneratedColumn()
     id: number
@@ -16,11 +16,11 @@ export class Teacher_Archive extends Timestamps {
     @Column()
     gender: string
 
-    @OneToMany(() => Subject_Archive, (subject_archive) => subject_archive.teacher, { onUpdate: 'CASCADE', cascade: true })
-    subject: Subject_Archive[]
+    @OneToMany(() => SubjectArchive, (subjectArchive) => subjectArchive.teacher, { onUpdate: 'CASCADE', cascade: true })
+    subject: SubjectArchive[]
 
-    @OneToMany(() => Examinations_Archive, (examinations_archive) => examinations_archive.teacher, { onUpdate: 'CASCADE', cascade: true })
-    examinations: Examinations_Archive[]
+    @OneToMany(() => ExaminationsArchive, (examinationsArchive) => examinationsArchive.teacher, { onUpdate: 'CASCADE', cascade: true })
+    examinations: ExaminationsArchive[]
 
     @ManyToOne(()=> AcademicYear, (academicYear)=>academicYear)
     academicYear: AcademicYear

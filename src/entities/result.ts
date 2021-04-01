@@ -3,7 +3,7 @@ import { Student } from '../entities/student'
 import { Examinations } from '../entities/examinations'
 import { Timestamps } from '../entities/timetamp'
 
-@Entity('result')
+@Entity('Result')
 export class Result extends Timestamps {
 
     @PrimaryGeneratedColumn()

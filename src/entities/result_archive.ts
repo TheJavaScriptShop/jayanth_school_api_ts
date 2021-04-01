@@ -1,11 +1,11 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Student_Archive } from '../entities/student_archive'
-import { Examinations_Archive } from '../entities/examination_archive'
+import { StudentArchive } from '../entities/student_archive'
+import { ExaminationsArchive } from '../entities/examination_archive'
 import { Timestamps } from '../entities/timetamp'
 import { AcademicYear } from "./academicYear"
 
 @Entity('Result_Archive')
-export class Result_Archive extends Timestamps {
+export class ResultArchive extends Timestamps {
 
     @PrimaryGeneratedColumn()
     id: number
@@ -13,12 +13,12 @@ export class Result_Archive extends Timestamps {
     @Column()
     marks: number
 
-    @ManyToOne(() => Student_Archive, (student_archive) => student_archive.marks, { 'cascade': true, onDelete: 'SET NULL' })
-    student: Student_Archive
+    @ManyToOne(() => StudentArchive, (studentArchive) => studentArchive.marks, { 'cascade': true, onDelete: 'SET NULL' })
+    student: StudentArchive
 
-    @ManyToOne(() => Examinations_Archive, { 'cascade': true, onDelete: 'SET NULL' })
+    @ManyToOne(() => ExaminationsArchive, { 'cascade': true, onDelete: 'SET NULL' })
     @JoinColumn()
-    exam: Examinations_Archive
+    exam: ExaminationsArchive
 
     @ManyToOne(()=> AcademicYear, (academicYear)=>academicYear)
     academicYear: AcademicYear

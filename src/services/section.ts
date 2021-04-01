@@ -99,7 +99,7 @@ export class SectionService {
         if (!deletedSection) {
             throw new Error("No section found")
         } else {
-            return this.sectionRepository.delete(deletedSection)
+            return this.sectionRepository.delete(deletedSection.id)
         }
 
     }

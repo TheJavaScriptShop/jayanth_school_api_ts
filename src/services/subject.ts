@@ -88,7 +88,7 @@ export class SubjectService {
         if (!subject) {
             throw new Error("There are no subject with this ID");
         } else {
-            this.subjectRepository.delete(subject)
+            return this.subjectRepository.delete(subject.id)
         }
     }
 }

@@ -2,8 +2,8 @@ import ArchiveControllers from '../controllers/archive'
 import Router from 'koa-router'
 const archiveRoutes = new Router()
 
-archiveRoutes.post('/archive/all', ArchiveControllers.archive);
+archiveRoutes.post('/archive', ArchiveControllers.archive);
 
-archiveRoutes.get('/archive/getstudent', ArchiveControllers.getStudent)
+archiveRoutes.get('/archive/student/get', ArchiveControllers.getStudent)
 
 export { archiveRoutes }

@@ -13,7 +13,7 @@ export class Subject extends Timestamps {
     name: string
 
     @ManyToMany(() => Student, (student) => student)
-    @JoinTable({ name: 'student_subject' })
+    @JoinTable({ name: 'Student_Subject' })
     student: Student[]
 
     @ManyToOne(() => Teacher, (teacher) => teacher.subject, { onUpdate: 'CASCADE', onDelete: 'SET NULL', nullable: true })

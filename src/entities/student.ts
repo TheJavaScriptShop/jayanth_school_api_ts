@@ -24,7 +24,7 @@ export class Student extends Timestamps {
     name: string
 
     @ManyToMany(() => Subject, (subject) => subject)
-    @JoinTable({ name: 'student_subject' })
+    @JoinTable({ name: 'Student_Subject' })
     subject: Subject[]
 
     @IsEnum(Gender)

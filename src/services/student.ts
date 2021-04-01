@@ -2,7 +2,7 @@ import { getManager, Repository } from 'typeorm'
 import { Student } from '../entities/student'
 import { Subject } from '../entities/subject'
 import { Section } from '../entities/section'
-import { Student_Archive } from '../entities/student_archive'
+import { StudentArchive } from '../entities/student_archive'
 
 export enum Gender {
     'male',
@@ -15,13 +15,13 @@ export class StudentService {
     studentRepository: Repository<Student>;
     subjectRepository: Repository<Subject>;
     sectionRepository: Repository<Section>;
-    studentArchiveRepository: Repository<Student_Archive>
+    studentArchiveRepository: Repository<StudentArchive>
 
     constructor() {
         this.studentRepository = getManager().getRepository(Student)
         this.subjectRepository = getManager().getRepository(Subject)
         this.sectionRepository = getManager().getRepository(Section)
-        this.studentArchiveRepository = getManager().getRepository(Student_Archive)
+        this.studentArchiveRepository = getManager().getRepository(StudentArchive)
     }
 
     public async createStudent(student: Partial<Student>, sectionId: number) {
@@ -75,7 +75,7 @@ export class StudentService {
         if (!student) {
             throw new Error("There are no Student with this ID");
         } else {
-            this.studentRepository.delete(student.id)
+            return this.studentRepository.delete(student.id)
         }
     }
 
