@@ -59,15 +59,15 @@ export class ArchiveServices {
         if (archiveStudents.length <= 0) {
             throw new Error("No Student Found");
         } else {
-            //console.log(archiveStudents)
+            
             const academicYear = await this.academicYear(academicYearId)
 
             let students = await this.studentArchiveRepository.save(archiveStudents)
             students.forEach((student, index) => {
                 students[index].academicYear = academicYear
-                //student.academicYear = academicYear
             })
             this.studentArchiveRepository.save(students)
+            // this.studentRepository.remove(archiveStudents)
 
         }
 
@@ -88,6 +88,7 @@ export class ArchiveServices {
             })
 
             this.sectionArchiveRepository.save(sections)
+            // this.sectionRepository.remove(archiveSections)
         }
 
     }
@@ -107,6 +108,7 @@ export class ArchiveServices {
             })
 
             this.schoolClassArchiveRepository.save(classes)
+            //  this.schoolClassRepository.remove(archiveClasses)
         }
 
     }
@@ -127,6 +129,7 @@ export class ArchiveServices {
             })
 
             this.teacherArchiveRepository.save(teachers)
+            //  this.teacherRepository.remove(archiveTeachers)
         }
 
     }
@@ -147,6 +150,7 @@ export class ArchiveServices {
             })
 
             this.subjectArchiveRepository.save(subjects)
+            //  this.subjectRepository.remove(archiveSubjects)
         }
     }
 
@@ -166,6 +170,7 @@ export class ArchiveServices {
             })
 
             this.examinationArchiveRepository.save(exams)
+            //  this.examinationsRepository.remove(archiveExams)
         }
     }
 
@@ -185,6 +190,7 @@ export class ArchiveServices {
             })
 
             this.resultArchiveRepository.save(results)
+            // this.resultRepository.remove(archiveResults)
         }
 
     }

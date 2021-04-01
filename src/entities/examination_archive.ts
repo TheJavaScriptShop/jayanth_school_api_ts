@@ -10,16 +10,16 @@ export class ExaminationsArchive extends Timestamps {
     id: number
 
     @Column()
-    exam_name: string
+    examName: string
 
     @Column()
-    subject_name: string
+    subjectName: string
 
     @Column()
-    total_marks: number
+    totalMarks: number
 
     @Column({ nullable: true })
-    max_time: number
+    maxTime: number
 
     @ManyToOne(() => TeacherArchive, (teacherArchive) => teacherArchive.examinations, { onDelete: "SET NULL", onUpdate: "CASCADE", nullable: true })
     teacher: TeacherArchive
