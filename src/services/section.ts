@@ -1,15 +1,18 @@
 import { Repository, getManager } from 'typeorm'
 import { SchoolClass } from '../entities/school_class'
 import { Section } from '../entities/section'
+import { SectionArchive } from "../entities/section_archive"
 
 export class SectionService {
 
     classRepository: Repository<SchoolClass>
     sectionRepository: Repository<Section>
+    sectionArchiveRepository: Repository<SectionArchive>
 
     constructor() {
         this.classRepository = getManager().getRepository(SchoolClass)
         this.sectionRepository = getManager().getRepository(Section)
+        this.sectionArchiveRepository = getManager().getRepository(SectionArchive)
     }
 
     public async createSection(section: Partial<Section>, classId: number) {
@@ -48,14 +51,30 @@ export class SectionService {
 
     }
 
-    public async getSections() {
+    public async getSections(academicYearId: number) {
 
-        const sections = await this.sectionRepository.find({ relations: ['schoolClass', 'student'] })
 
-        if (sections.length <= 0) {
-            throw new Error("No sections was found may be deleted");
+        if (academicYearId === undefined) {
+
+            const sections = await this.sectionRepository.find({ relations: ['schoolClass', 'student'] })
+
+            if (sections.length <= 0) {
+                throw new Error("No sections found");
+            } else {
+                return sections
+            }
         } else {
-            return sections
+            const pastSections = await this.sectionArchiveRepository.find({
+                where: {
+                    academicYear: academicYearId
+                }
+            })
+
+            if (pastSections.length <= 0) {
+                throw new Error("There are no sections in this year");
+            } else {
+                return pastSections
+            }
         }
 
     }

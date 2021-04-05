@@ -22,7 +22,7 @@ export class TeacherArchive extends Timestamps {
     @OneToMany(() => ExaminationsArchive, (examinationsArchive) => examinationsArchive.teacher, { onUpdate: 'CASCADE', cascade: true })
     examinations: ExaminationsArchive[]
 
-    @ManyToOne(()=> AcademicYear, (academicYear)=>academicYear)
+    @ManyToOne(() => AcademicYear, (academicYear) => academicYear)
     academicYear: AcademicYear
 
 }

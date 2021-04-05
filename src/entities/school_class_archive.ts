@@ -15,7 +15,7 @@ export class SchoolClassArchive extends Timestamps {
     @OneToMany(() => SectionArchive, (sectionArchive) => sectionArchive.schoolClass, { onUpdate: "CASCADE", onDelete: "SET NULL" })
     section: SectionArchive[]
 
-    @ManyToOne(()=> AcademicYear, (academicYear)=>academicYear)
+    @ManyToOne(() => AcademicYear, (academicYear) => academicYear)
     academicYear: AcademicYear
-    
+
 }

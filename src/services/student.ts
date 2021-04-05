@@ -3,6 +3,7 @@ import { Student } from '../entities/student'
 import { Subject } from '../entities/subject'
 import { Section } from '../entities/section'
 import { StudentArchive } from '../entities/student_archive'
+import { AcademicYear } from '../entities/academicYear'
 
 export enum Gender {
     'male',
@@ -16,12 +17,14 @@ export class StudentService {
     subjectRepository: Repository<Subject>;
     sectionRepository: Repository<Section>;
     studentArchiveRepository: Repository<StudentArchive>
+    academicYearRepository: Repository<AcademicYear>
 
     constructor() {
         this.studentRepository = getManager().getRepository(Student)
         this.subjectRepository = getManager().getRepository(Subject)
         this.sectionRepository = getManager().getRepository(Section)
         this.studentArchiveRepository = getManager().getRepository(StudentArchive)
+        this.academicYearRepository = getManager().getRepository(AcademicYear)
     }
 
     public async createStudent(student: Partial<Student>, sectionId: number) {
@@ -79,23 +82,39 @@ export class StudentService {
         }
     }
 
-    public async getAllStudents() {
+    public async getAllStudents(academicYearId: number) {
 
-        const students = await this.studentRepository.find({ relations: ["subject", "section", "section.schoolClass"] });
+        if (academicYearId === undefined) {
 
-        if (students.length <= 0) {
-            throw new Error("There are no students");
+            const students = await this.studentRepository.find({ relations: ["subject", "section", "section.schoolClass"] });
+
+            if (students.length <= 0) {
+                throw new Error("There are no students");
+            } else {
+                return students;
+            }
+
         } else {
-            return students;
-        }
 
+            const pastStudents = await this.studentArchiveRepository.find({
+                where: {
+                    academicYear: academicYearId
+                }, relations: ["subject", "section", "section.schoolClass"]
+            })
+
+            if (pastStudents.length <= 0) {
+                throw new Error("There are no students in this Year");
+            } else {
+                return pastStudents;
+            }
+        }
     }
 
-    public async getStudentById(s: Partial<Student>) {
+    public async getStudentById(student: Partial<Student>) {
 
-        const student = await this.studentRepository.findOne({
+        const newStudent = await this.studentRepository.findOne({
             where: {
-                id: s.id
+                id: student.id
             },
             relations: ["subject", "section", "section.schoolClass"]
         })

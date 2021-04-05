@@ -1,12 +1,15 @@
 import { getManager, Repository } from 'typeorm'
 import { Teacher } from '../entities/teacher'
+import { TeacherArchive } from "../entities/teacher_archive"
 
 export class TeacherService {
 
     teacherRepository: Repository<Teacher>
+    teacherArchiveRepository: Repository<TeacherArchive>
 
     constructor() {
         this.teacherRepository = getManager().getRepository(Teacher)
+        this.teacherArchiveRepository = getManager().getRepository(TeacherArchive)
     }
 
     public async create(teacher: Partial<Teacher>) {
@@ -33,11 +36,33 @@ export class TeacherService {
         return teacher;
     }
 
-    public async getAllTeachers() {
+    public async getAllTeachers(academicYearId: number) {
 
-        const teachers = await this.teacherRepository.find({ relations: ['subject'] })
+        if (academicYearId === undefined) {
 
-        return teachers
+            const teachers = await this.teacherRepository.find({ relations: ['subject'] });
+
+
+            if (teachers.length <= 0) {
+                throw new Error("There are no teachers");
+            } else {
+                return teachers;
+            }
+
+        } else {
+
+            const pastTeachers = await this.teacherArchiveRepository.find({
+                where: {
+                    academicYear: academicYearId
+                }, relations: ['subject']
+            })
+
+            if (pastTeachers.length <= 0) {
+                throw new Error("There are no teachers in this Year");
+            } else {
+                return pastTeachers;
+            }
+        }
     }
 
     public async updateTeacher(teacher: Partial<Teacher>) {

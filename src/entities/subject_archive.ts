@@ -20,7 +20,7 @@ export class SubjectArchive extends Timestamps {
     @ManyToOne(() => TeacherArchive, (teacherArchive) => teacherArchive.subject, { onUpdate: 'CASCADE', onDelete: 'SET NULL', nullable: true })
     teacher: TeacherArchive
 
-    @ManyToOne(()=> AcademicYear, (academicYear)=>academicYear)
+    @ManyToOne(() => AcademicYear, (academicYear) => academicYear)
     academicYear: AcademicYear
-    
+
 }

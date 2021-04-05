@@ -45,8 +45,8 @@ export class archiveTables1617101788202 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "Teacher_Archive" ADD CONSTRAINT "FK_909a0eccc7f179f59ad2385f001" FOREIGN KEY ("academicYearId") REFERENCES "AcademicYear"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "Examinations_Archive" ADD CONSTRAINT "FK_5a49ed4c0b4fb34ec983f60164b" FOREIGN KEY ("teacherId") REFERENCES "Teacher_Archive"("id") ON DELETE SET NULL ON UPDATE CASCADE`);
         await queryRunner.query(`ALTER TABLE "Examinations_Archive" ADD CONSTRAINT "FK_59d2ac97140bf5811a1b6fff4ea" FOREIGN KEY ("academicYearId") REFERENCES "AcademicYear"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "Student_Subject_Archive" ADD CONSTRAINT "FK_1063340eb553266d01596faff14" FOREIGN KEY ("studentArchiveId") REFERENCES "Student_Archive"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "Student_Subject_Archive" ADD CONSTRAINT "FK_02cec8bf706f681ade5af6045b9" FOREIGN KEY ("subjectArchiveId") REFERENCES "Subject_Archive"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "Student_Subject_Archive" ADD CONSTRAINT "FK_1063340eb553266d01596faff14" FOREIGN KEY ("studentArchiveId") REFERENCES "Student_Archive"("id") ON DELETE SET NULL ON UPDATE CASCADE`);
+        await queryRunner.query(`ALTER TABLE "Student_Subject_Archive" ADD CONSTRAINT "FK_02cec8bf706f681ade5af6045b9" FOREIGN KEY ("subjectArchiveId") REFERENCES "Subject_Archive"("id") ON DELETE SET NULL ON UPDATE CASCADE`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {

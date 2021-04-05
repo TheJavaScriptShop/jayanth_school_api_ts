@@ -2,17 +2,20 @@ import { Repository, getManager } from 'typeorm'
 import { Examinations } from '../entities/examinations'
 import { Teacher } from '../entities/teacher'
 import { Subject } from '../entities/subject'
+import { ExaminationsArchive } from '../entities/examination_archive'
 
 export class ExamService {
 
     examRespository: Repository<Examinations>
     teacherRepository: Repository<Teacher>
     subjectRepository: Repository<Subject>
+    examArchiveRepository: Repository<ExaminationsArchive>
 
     constructor() {
         this.examRespository = getManager().getRepository(Examinations)
         this.teacherRepository = getManager().getRepository(Teacher)
         this.subjectRepository = getManager().getRepository(Subject)
+        this.examArchiveRepository = getManager().getRepository(ExaminationsArchive)
     }
 
     public async createExam(examinations: Partial<Examinations>, teacherId: number, subjectId: number) {
@@ -94,15 +97,28 @@ export class ExamService {
         }
     }
 
-    public async getAllExams() {
+    public async getAllExams(academicYearId: number) {
+        if (academicYearId === undefined) {
+            const exams = await this.examRespository.find({ relations: ['teacher'] })
 
-        const exams = await this.examRespository.find({ relations: ['teacher'] })
-
-        if (exams.length <= 0) {
-            throw new Error('There are no exams')
+            if (exams.length <= 0) {
+                throw new Error('There are no exams')
+            } else {
+                return exams
+            }
         } else {
-            return exams
+            const pastExams = await this.examArchiveRepository.find({
+                where: {
+                    academicYear: academicYearId
+                }, relations: ['teacher']
+            })
+            if (pastExams.length <= 0) {
+                throw new Error("There are no exams in this year");
+            } else {
+                return pastExams
+            }
         }
+
     }
 
     public async deleteExam(examId: number) {

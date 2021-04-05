@@ -82,13 +82,29 @@ export default class StudentController {
         const studentService = new StudentService();
 
         try {
-            const students = await studentService.getAllStudents()
+            const academicYearId = ctx.request.body
 
-            if (students.length <= 0) {
-                ctx.body = { message: "There are no students " }
+            ctx.checkBody('academicYearId').optional().isInt('It should be a number')
+
+            if (academicYearId === undefined) {
+                const students = await studentService.getAllStudents(academicYearId)
+
+                if (students.length <= 0) {
+                    ctx.body = { message: "There are no students " }
+                } else {
+                    ctx.body = students;
+                    ctx.response.status = 200;
+                }
             } else {
-                ctx.body = students;
-                ctx.response.status = 200;
+                const students = await studentService.getAllStudents(academicYearId.academicYearId)
+
+                if (students.length <= 0) {
+                    ctx.body = { message: "There are no students " }
+                } else {
+                    ctx.body = students;
+                    ctx.response.status = 200;
+                }
+
             }
 
         } catch (error) {

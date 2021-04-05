@@ -56,8 +56,21 @@ export default class SectionController {
         const sectionService = new SectionService()
 
         try {
-            const sections = await sectionService.getSections()
-            ctx.body = sections
+
+            const academicYearId = ctx.request.body
+
+            ctx.checkBody('academicYearId').optional().isInt('It should be a number')
+
+            if (academicYearId === undefined) {
+
+                const sections = await sectionService.getSections(academicYearId)
+
+                ctx.body = { message: "Success", sections }
+            } else {
+                const pastSections = await sectionService.getSections(academicYearId.academicYearId)
+
+                ctx.body = { message: 'success', pastSections }
+            }
 
         } catch (error) {
             ctx.body = { message: error.message }

@@ -1,16 +1,19 @@
 import { getManager, Repository } from 'typeorm'
 import { Subject } from '../entities/subject'
 import { Teacher } from '../entities/teacher'
+import { SubjectArchive } from "../entities/subject_archive"
 
 
 export class SubjectService {
 
     subjectRepository: Repository<Subject>
     teacherRepository: Repository<Teacher>
+    subjectArchiveRepository: Repository<Subject>
 
     constructor() {
         this.subjectRepository = getManager().getRepository(Subject);
         this.teacherRepository = getManager().getRepository(Teacher)
+        this.subjectArchiveRepository = getManager().getRepository(SubjectArchive)
     }
 
     public async create(subject: Partial<Subject>, teacherId: number) {
@@ -29,14 +32,33 @@ export class SubjectService {
         return this.subjectRepository.save(newSubject);
     }
 
-    public async getSubjects() {
+    public async getSubjects(academicYearId: number) {
 
-        const subjects = await this.subjectRepository.find({ relations: ["student", 'teacher'] });
 
-        if (subjects.length <= 0) {
-            throw new Error("No subjects Found");
+        if (academicYearId === undefined) {
+
+            const subjects = await this.subjectRepository.find({ relations: ["student", 'teacher'] });
+
+
+            if (subjects.length <= 0) {
+                throw new Error("There are no subjects");
+            } else {
+                return subjects;
+            }
+
         } else {
-            return subjects
+
+            const pastSubjects = await this.subjectArchiveRepository.find({
+                where: {
+                    academicYear: academicYearId
+                }, relations: ["student", 'teacher']
+            })
+
+            if (pastSubjects.length <= 0) {
+                throw new Error("There are no subjects in this Year");
+            } else {
+                return pastSubjects;
+            }
         }
 
     }

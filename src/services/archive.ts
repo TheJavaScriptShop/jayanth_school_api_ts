@@ -54,20 +54,19 @@ export class ArchiveServices {
 
     public async moveStudent(academicYearId: number) {
 
-        const archiveStudents = await this.studentRepository.find({ relations: ['section'] })
+        const archiveStudents = await this.studentRepository.find({ relations: ["subject", "section", "section.schoolClass"] })
 
         if (archiveStudents.length <= 0) {
             throw new Error("No Student Found");
         } else {
-            
+
             const academicYear = await this.academicYear(academicYearId)
 
             let students = await this.studentArchiveRepository.save(archiveStudents)
             students.forEach((student, index) => {
                 students[index].academicYear = academicYear
             })
-            this.studentArchiveRepository.save(students)
-            // this.studentRepository.remove(archiveStudents)
+            await this.studentArchiveRepository.save(students)
 
         }
 
@@ -75,7 +74,7 @@ export class ArchiveServices {
 
     public async moveSection(academicYearId: number) {
 
-        const archiveSections = await this.sectionRepository.find({ relations: ['schoolClass'] })
+        const archiveSections = await this.sectionRepository.find({ relations: ['schoolClass', 'student'] })
 
         if (archiveSections.length <= 0) {
             throw new Error("No sections found");
@@ -87,8 +86,7 @@ export class ArchiveServices {
                 sections[index].academicYear = academicYear
             })
 
-            this.sectionArchiveRepository.save(sections)
-            // this.sectionRepository.remove(archiveSections)
+            await this.sectionArchiveRepository.save(sections)
         }
 
     }
@@ -107,15 +105,14 @@ export class ArchiveServices {
                 classes[index].academicYear = academicYear
             })
 
-            this.schoolClassArchiveRepository.save(classes)
-            //  this.schoolClassRepository.remove(archiveClasses)
+            await this.schoolClassArchiveRepository.save(classes)
         }
 
     }
 
     public async moveTeacher(academicYearId: number) {
 
-        const archiveTeachers = await this.teacherRepository.find()
+        const archiveTeachers = await this.teacherRepository.find({ relations: ['subject'] })
 
         if (archiveTeachers.length <= 0) {
             throw new Error("No teacher Found");
@@ -128,15 +125,14 @@ export class ArchiveServices {
                 teachers[index].academicYear = academicYear
             })
 
-            this.teacherArchiveRepository.save(teachers)
-            //  this.teacherRepository.remove(archiveTeachers)
+            await this.teacherArchiveRepository.save(teachers)
         }
 
     }
 
     public async moveSubject(academicYearId: number) {
 
-        const archiveSubjects = await this.subjectRepository.find({ relations: ['teacher'] })
+        const archiveSubjects = await this.subjectRepository.find({ relations: ['teacher','student'] })
 
         if (archiveSubjects.length <= 0) {
             throw new Error("No Subjects Found");
@@ -149,62 +145,76 @@ export class ArchiveServices {
                 subjects[index].academicYear = academicYear
             })
 
-            this.subjectArchiveRepository.save(subjects)
-            //  this.subjectRepository.remove(archiveSubjects)
+            await this.subjectArchiveRepository.save(subjects)
         }
     }
 
     public async moveExaminations(academicYearId: number) {
 
-        const archiveExams = await this.examinationsRepository.find({ relations: ['teacher'] })
+        const exams = await this.examinationsRepository.find({ relations: ['teacher'] })
 
-        if (archiveExams.length <= 0) {
+        if (exams.length <= 0) {
             throw new Error("No Exams Found");
         } else {
             const academicYear = await this.academicYear(academicYearId)
 
-            let exams = await this.examinationArchiveRepository.save(archiveExams)
+            let archiveExams = await this.examinationArchiveRepository.save(exams);
 
-            exams.forEach((exam, index) => {
-                exams[index].academicYear = academicYear
+            archiveExams.forEach((exam, index) => {
+                archiveExams[index].academicYear = academicYear
             })
 
-            this.examinationArchiveRepository.save(exams)
-            //  this.examinationsRepository.remove(archiveExams)
+            const exam = await this.examinationArchiveRepository.save(archiveExams)
         }
     }
 
     public async moveResults(academicYearId: number) {
 
-        const archiveResults = await this.resultRepository.find({ relations: ['exam', 'student'] })
+        const results = await this.resultRepository.find({ relations: ['exam', 'student'] })
 
-        if (archiveResults.length <= 0) {
+        if (results.length <= 0) {
             throw new Error("No results found");
         } else {
             const academicYear = await this.academicYear(academicYearId)
 
-            let results = await this.resultArchiveRepository.save(archiveResults)
+            let archiveResults = await this.resultArchiveRepository.save(results)
 
-            results.forEach((result, index) => {
-                results[index].academicYear = academicYear
+            archiveResults.forEach((result, index) => {
+                archiveResults[index].academicYear = academicYear
             })
 
-            this.resultArchiveRepository.save(results)
-            // this.resultRepository.remove(archiveResults)
+            const result = await this.resultArchiveRepository.save(archiveResults)
         }
 
+    }
+
+    public async removeNormalTables() {
+        const classes = await this.schoolClassRepository.find()
+        await this.schoolClassRepository.remove(classes)
+        const sections = await this.sectionRepository.find({ relations: ['schoolClass'] })
+        await this.sectionRepository.remove(sections)
+        const students = await this.studentRepository.find({ relations: ['section'] })
+        await this.studentRepository.remove(students)
+        const teachers = await this.teacherRepository.find()
+        await this.teacherRepository.remove(teachers)
+        const subjects = await this.subjectRepository.find({ relations: ['teacher'] })
+        await this.subjectRepository.remove(subjects)
+        const exams = await this.examinationsRepository.find({ relations: ['teacher'] })
+        await this.examinationsRepository.remove(exams)
+        const result = await this.resultRepository.find({ relations: ['exam', 'student'] })
+        await this.resultRepository.remove(result)
     }
 
     public async archive(academicYearId) {
 
         await this.moveClass(academicYearId)
         await this.moveSection(academicYearId)
-        await this.moveStudent(academicYearId)
         await this.moveTeacher(academicYearId)
         await this.moveSubject(academicYearId)
+        await this.moveStudent(academicYearId)
         await this.moveExaminations(academicYearId)
         await this.moveResults(academicYearId)
-
+        await this.removeNormalTables()
     }
 
     public async academicYear(academicYearId: number) {

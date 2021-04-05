@@ -33,13 +33,29 @@ export default class SubjectControllers {
         const subjectService = new SubjectService()
 
         try {
-            const subjects = await subjectService.getSubjects()
+            const academicYearId = ctx.request.body
 
-            if (subjects.length <= 0) {
-                ctx.body = { message: "There are no subjects" }
+            ctx.checkBody('academicYearId').optional().isInt('It should be a number')
+
+            if (academicYearId === undefined) {
+                const subjects = await subjectService.getSubjects(academicYearId)
+
+                if (subjects.length <= 0) {
+                    ctx.body = { message: "There are no subjects " }
+                } else {
+                    ctx.body = subjects;
+                    ctx.response.status = 200;
+                }
             } else {
-                ctx.body = subjects
-                ctx.response.status = 200
+                const pastSubjects = await subjectService.getSubjects(academicYearId.academicYearId)
+
+                if (pastSubjects.length <= 0) {
+                    ctx.body = { message: "There are no pastSubjects " }
+                } else {
+                    ctx.body = pastSubjects;
+                    ctx.response.status = 200;
+                }
+
             }
 
         } catch (error) {

@@ -79,9 +79,22 @@ export default class ResultControllers {
         const resultService = new ResultService()
 
         try {
-            const results = await resultService.getResults()
 
-            ctx.body = { message: "Success", results }
+            const academicYearId = ctx.request.body
+
+            ctx.checkBody('academicYearId').optional().isInt('It should be a number')
+
+            if (academicYearId === undefined) {
+
+                const results = await resultService.getResults(academicYearId)
+
+                ctx.body = { message: "Success", results }
+            } else {
+                const pastResults = await resultService.getResults(academicYearId.academicYearId)
+
+                ctx.body = { message: 'success', pastResults }
+            }
+
         } catch (error) {
             ctx.body = { message: error.message }
         }

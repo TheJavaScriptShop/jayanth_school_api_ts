@@ -63,13 +63,29 @@ export default class TeacherControllers {
         const teacherService = new TeacherService()
 
         try {
-            const teachers = await teacherService.getAllTeachers()
+            const academicYearId = ctx.request.body
 
-            if (teachers.length <= 0) {
-                ctx.body = { message: "There are no Teachers" }
+            ctx.checkBody('academicYearId').optional().isInt('It should be a number')
+
+            if (academicYearId === undefined) {
+                const teachers = await teacherService.getAllTeachers(academicYearId)
+
+                if (teachers.length <= 0) {
+                    ctx.body = { message: "There are no teachers " }
+                } else {
+                    ctx.body = teachers;
+                    ctx.response.status = 200;
+                }
             } else {
-                ctx.body = teachers
-                ctx.response.status = 200
+                const pastTeachers = await teacherService.getAllTeachers(academicYearId.academicYearId)
+
+                if (pastTeachers.length <= 0) {
+                    ctx.body = { message: "There are no pastTeachers " }
+                } else {
+                    ctx.body = pastTeachers;
+                    ctx.response.status = 200;
+                }
+
             }
 
         } catch (error) {

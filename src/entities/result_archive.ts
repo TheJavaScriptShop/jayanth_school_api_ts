@@ -20,7 +20,7 @@ export class ResultArchive extends Timestamps {
     @JoinColumn()
     exam: ExaminationsArchive
 
-    @ManyToOne(()=> AcademicYear, (academicYear)=>academicYear)
+    @ManyToOne(() => AcademicYear, (academicYear) => academicYear)
     academicYear: AcademicYear
 
 }

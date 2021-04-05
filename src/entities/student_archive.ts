@@ -39,7 +39,7 @@ export class StudentArchive extends Timestamps {
     @JoinColumn()
     section: SectionArchive
 
-    @ManyToOne(()=> AcademicYear, (academicYear)=>academicYear)
+    @ManyToOne(() => AcademicYear, (academicYear) => academicYear)
     academicYear: AcademicYear
 
 }

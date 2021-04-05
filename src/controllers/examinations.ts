@@ -86,8 +86,18 @@ export default class ExamControllers {
         const examService = new ExamService();
 
         try {
-            const exams = await examService.getAllExams();
-            ctx.body = { message: "Success", exams }
+            const academicYearId = ctx.request.body
+
+            ctx.checkBody('academicYearId').optional().isInt('It should be a number')
+
+            if (academicYearId === undefined) {
+                const exams = await examService.getAllExams(academicYearId);
+                ctx.body = { message: "Success", exams }
+            } else {
+                const pastExams = await examService.getAllExams(academicYearId.academicYearId)
+                ctx.body = { message: "success", pastExams }
+            }
+
 
         } catch (error) {
             ctx.body = { message: error.message }

@@ -11,7 +11,7 @@ export default class StudentSubjectController {
             const { studentId } = ctx.request.body;
             const { subjectId } = ctx.request.body;
 
-            ctx.checkBody('studentId').notEmpty('student id cannot be empty').isInt('student Id should be int or number ')
+            ctx.checkBody('studentId').notEmpty('student id cannot be empty')
             ctx.checkBody('subjectId').notEmpty('subject id cannot be empty').isInt('subject Id should be int or number ')
 
             if (ctx.errors) {
