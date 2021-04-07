@@ -1,15 +1,15 @@
 import Router from 'koa-router'
-import ResultControllers from '../controllers/result'
+import ResultController from '../controllers/result'
 const resultRoutes = new Router()
 
-resultRoutes.post('/result/create', ResultControllers.addResult)
+resultRoutes.post('/result/create', ResultController.addResult)
 
-resultRoutes.put('/result/update', ResultControllers.updateResult)
+resultRoutes.put('/result/update', ResultController.updateResult)
 
-resultRoutes.get('/result/getone', ResultControllers.getResult)
+resultRoutes.get('/result/getone', ResultController.getResult)
 
-resultRoutes.get('/result/getall', ResultControllers.getResults)
+resultRoutes.get('/result/getall', ResultController.getResults)
 
-resultRoutes.delete('/result/delete', ResultControllers.deleteResult)
+resultRoutes.delete('/result/delete', ResultController.deleteResult)
 
 export { resultRoutes }

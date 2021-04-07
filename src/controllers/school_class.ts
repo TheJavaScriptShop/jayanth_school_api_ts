@@ -57,17 +57,17 @@ export default class ClassController {
 
         try {
 
-            const academicYearId = ctx.request.body
+            const data = ctx.request.body
 
-            ctx.checkBody('academicYearId').optional().isInt('It should be a number')
+            ctx.checkBody('data').optional().isInt('It should be a number')
 
-            if (academicYearId === undefined) {
+            if (data === undefined) {
 
-                const classes = await classService.getAllClasses(academicYearId)
+                const classes = await classService.getAllClasses(data)
 
                 ctx.body = { message: "Success", classes }
             } else {
-                const pastClasses = await classService.getAllClasses(academicYearId.academicYearId)
+                const pastClasses = await classService.getAllClasses(data.academicYearId)
 
                 ctx.body = { message: 'success', pastClasses }
             }

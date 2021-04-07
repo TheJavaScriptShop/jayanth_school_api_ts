@@ -1,11 +1,11 @@
 import { Context } from 'koa';
-import { ArchiveServices } from '../services/archive'
+import { ArchiveService } from '../services/archive'
 
-export default class ArchiveControllers {
+export default class ArchiveController {
 
     public static async archive(ctx: Context) {
 
-        const archiveServices = new ArchiveServices()
+        const archiveService = new ArchiveService()
 
         try {
             const { academicId } = ctx.request.body
@@ -15,7 +15,7 @@ export default class ArchiveControllers {
                 ctx.response.status = 400;
                 ctx.body = ctx.errors
             } else {
-                await archiveServices.archive(academicId)
+                await archiveService.archive(academicId)
                 ctx.body = { message: "Done" }
             }
 
@@ -27,7 +27,7 @@ export default class ArchiveControllers {
 
     public static async getStudent(ctx: Context) {
 
-        const archiveServices = new ArchiveServices()
+        const archiveService = new ArchiveService()
 
         try {
             const { studentId } = ctx.request.body
@@ -38,7 +38,7 @@ export default class ArchiveControllers {
                 ctx.response.status = 400
                 ctx.body = ctx.errors
             } else {
-                const student = await archiveServices.getStudent(studentId)
+                const student = await archiveService.getStudent(studentId)
                 ctx.body = student
             }
         } catch (error) {

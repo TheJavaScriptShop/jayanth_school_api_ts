@@ -1,7 +1,7 @@
-import AcademicYearControllers from '../controllers/academicYear'
+import AcademicYearController from '../controllers/academicYear'
 import Router from 'koa-router'
 const academicYearRoutes = new Router()
 
-academicYearRoutes.post('/academicyear/create', AcademicYearControllers.createYear);
+academicYearRoutes.post('/academicyear/create', AcademicYearController.createYear);
 
 export { academicYearRoutes }

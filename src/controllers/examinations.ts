@@ -1,7 +1,7 @@
 import { Context } from 'koa';
 import { ExamService } from '../services/examinations'
 
-export default class ExamControllers {
+export default class ExamController {
 
     public static async createExam(ctx: Context) {
 
@@ -86,15 +86,15 @@ export default class ExamControllers {
         const examService = new ExamService();
 
         try {
-            const academicYearId = ctx.request.body
+            const data = ctx.request.body
 
-            ctx.checkBody('academicYearId').optional().isInt('It should be a number')
+            ctx.checkBody('data').optional().isInt('It should be a number')
 
-            if (academicYearId === undefined) {
-                const exams = await examService.getAllExams(academicYearId);
+            if (data === undefined) {
+                const exams = await examService.getAllExams(data);
                 ctx.body = { message: "Success", exams }
             } else {
-                const pastExams = await examService.getAllExams(academicYearId.academicYearId)
+                const pastExams = await examService.getAllExams(data.academicYearId)
                 ctx.body = { message: "success", pastExams }
             }
 

@@ -15,7 +15,7 @@ import { Result } from "../entities/result"
 import { ResultArchive } from "../entities/result_archive"
 import { AcademicYear } from '../entities/academicYear'
 
-export class ArchiveServices {
+export class ArchiveService {
 
     studentRepository: Repository<Student>
     studentArchiveRepository: Repository<StudentArchive>
@@ -189,20 +189,13 @@ export class ArchiveServices {
     }
 
     public async removeNormalTables() {
-        const classes = await this.schoolClassRepository.find()
-        await this.schoolClassRepository.remove(classes)
-        const sections = await this.sectionRepository.find({ relations: ['schoolClass'] })
-        await this.sectionRepository.remove(sections)
-        const students = await this.studentRepository.find({ relations: ['section'] })
-        await this.studentRepository.remove(students)
-        const teachers = await this.teacherRepository.find()
-        await this.teacherRepository.remove(teachers)
-        const subjects = await this.subjectRepository.find({ relations: ['teacher'] })
-        await this.subjectRepository.remove(subjects)
-        const exams = await this.examinationsRepository.find({ relations: ['teacher'] })
-        await this.examinationsRepository.remove(exams)
-        const result = await this.resultRepository.find({ relations: ['exam', 'student'] })
-        await this.resultRepository.remove(result)
+        await this.schoolClassRepository.delete({})
+        await this.sectionRepository.delete({})
+        await this.studentRepository.delete({})
+        await this.teacherRepository.delete({})
+        await this.subjectRepository.delete({})
+        await this.examinationsRepository.delete({})
+        await this.resultRepository.delete({})
     }
 
     public async archive(academicYearId) {

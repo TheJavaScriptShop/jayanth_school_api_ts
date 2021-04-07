@@ -1,7 +1,7 @@
 import { Context } from "koa"
 import { ResultService } from '../services/result'
 
-export default class ResultControllers {
+export default class ResultController {
 
     public static async addResult(ctx: Context) {
 
@@ -80,17 +80,17 @@ export default class ResultControllers {
 
         try {
 
-            const academicYearId = ctx.request.body
+            const data = ctx.request.body
 
-            ctx.checkBody('academicYearId').optional().isInt('It should be a number')
+            ctx.checkBody('data').optional().isInt('It should be a number')
 
-            if (academicYearId === undefined) {
+            if (data === undefined) {
 
-                const results = await resultService.getResults(academicYearId)
+                const results = await resultService.getResults(data)
 
                 ctx.body = { message: "Success", results }
             } else {
-                const pastResults = await resultService.getResults(academicYearId.academicYearId)
+                const pastResults = await resultService.getResults(data.academicYearId)
 
                 ctx.body = { message: 'success', pastResults }
             }

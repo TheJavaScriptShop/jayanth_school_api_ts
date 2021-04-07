@@ -1,7 +1,7 @@
 import { Repository, getManager } from "typeorm";
 import { AcademicYear } from "../entities/academicYear";
 
-export class AcademicYearServices {
+export class AcademicYearService {
 
     academicYearRepository: Repository<AcademicYear>
 

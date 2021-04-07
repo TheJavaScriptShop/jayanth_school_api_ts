@@ -1,11 +1,11 @@
 import { Context } from 'koa';
-import { AcademicYearServices } from '../services/academicYear'
+import { AcademicYearService } from '../services/academicYear'
 
-export default class AcademicYearControllers {
+export default class AcademicYearController {
 
     public static async createYear(ctx: Context) {
 
-        const academicYearServices = new AcademicYearServices()
+        const academicYearService = new AcademicYearService()
 
         try {
             const { label } = ctx.request.body
@@ -16,7 +16,7 @@ export default class AcademicYearControllers {
                 ctx.response.status = 400;
                 ctx.body = ctx.errors
             } else {
-                const newYear = await academicYearServices.createYear(label)
+                const newYear = await academicYearService.createYear(label)
                 ctx.body = { message: "success", newYear }
             }
 

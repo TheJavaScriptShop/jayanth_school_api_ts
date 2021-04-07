@@ -57,17 +57,17 @@ export default class SectionController {
 
         try {
 
-            const academicYearId = ctx.request.body
+            const data = ctx.request.body
 
-            ctx.checkBody('academicYearId').optional().isInt('It should be a number')
+            ctx.checkBody('data').optional().isInt('It should be a number')
 
-            if (academicYearId === undefined) {
+            if (data === undefined) {
 
-                const sections = await sectionService.getSections(academicYearId)
+                const sections = await sectionService.getSections(data)
 
                 ctx.body = { message: "Success", sections }
             } else {
-                const pastSections = await sectionService.getSections(academicYearId.academicYearId)
+                const pastSections = await sectionService.getSections(data.academicYearId)
 
                 ctx.body = { message: 'success', pastSections }
             }

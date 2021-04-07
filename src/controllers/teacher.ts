@@ -1,7 +1,7 @@
 import { Context } from 'koa';
 import { TeacherService } from '../services/teacher'
 
-export default class TeacherControllers {
+export default class TeacherController {
 
     public static async createTeacher(ctx: Context) {
 
@@ -63,12 +63,12 @@ export default class TeacherControllers {
         const teacherService = new TeacherService()
 
         try {
-            const academicYearId = ctx.request.body
+            const data = ctx.request.body
 
-            ctx.checkBody('academicYearId').optional().isInt('It should be a number')
+            ctx.checkBody('data').optional().isInt('It should be a number')
 
-            if (academicYearId === undefined) {
-                const teachers = await teacherService.getAllTeachers(academicYearId)
+            if (data === undefined) {
+                const teachers = await teacherService.getAllTeachers(data)
 
                 if (teachers.length <= 0) {
                     ctx.body = { message: "There are no teachers " }
@@ -77,7 +77,7 @@ export default class TeacherControllers {
                     ctx.response.status = 200;
                 }
             } else {
-                const pastTeachers = await teacherService.getAllTeachers(academicYearId.academicYearId)
+                const pastTeachers = await teacherService.getAllTeachers(data.academicYearId)
 
                 if (pastTeachers.length <= 0) {
                     ctx.body = { message: "There are no pastTeachers " }
