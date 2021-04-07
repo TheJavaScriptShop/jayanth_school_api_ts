@@ -2,22 +2,25 @@ import { Repository, getManager } from 'typeorm'
 import { Examinations } from '../entities/examinations'
 import { Teacher } from '../entities/teacher'
 import { Subject } from '../entities/subject'
+import { ExaminationsArchive } from '../entities/examination_archive'
 
 export class ExamService {
 
-    examrespository: Repository<Examinations>
-    teacherrepository: Repository<Teacher>
-    subjectrepository: Repository<Subject>
+    examRespository: Repository<Examinations>
+    teacherRepository: Repository<Teacher>
+    subjectRepository: Repository<Subject>
+    examArchiveRepository: Repository<ExaminationsArchive>
 
     constructor() {
-        this.examrespository = getManager().getRepository(Examinations)
-        this.teacherrepository = getManager().getRepository(Teacher)
-        this.subjectrepository = getManager().getRepository(Subject)
+        this.examRespository = getManager().getRepository(Examinations)
+        this.teacherRepository = getManager().getRepository(Teacher)
+        this.subjectRepository = getManager().getRepository(Subject)
+        this.examArchiveRepository = getManager().getRepository(ExaminationsArchive)
     }
 
     public async createExam(examinations: Partial<Examinations>, teacherId: number, subjectId: number) {
 
-        const assignTeacher = await this.teacherrepository.findOne({
+        const assignTeacher = await this.teacherRepository.findOne({
             where: {
                 id: teacherId
             }
@@ -28,7 +31,7 @@ export class ExamService {
             throw new Error("Teacher not found");
 
         }
-        const subject = await this.subjectrepository.findOne({
+        const subject = await this.subjectRepository.findOne({
             where: {
                 id: subjectId
             }
@@ -38,31 +41,31 @@ export class ExamService {
             throw new Error("Subject not found");
 
         }
-        const exam = await this.examrespository.create({
+        const exam = await this.examRespository.create({
             id: examinations.id,
-            exam_name: examinations.exam_name,
-            subject_name: subject.name,
-            total_marks: examinations.total_marks,
-            max_time: examinations.max_time,
+            examName: examinations.examName,
+            subjectName: subject.name,
+            totalMarks: examinations.totalMarks,
+            maxTime: examinations.maxTime,
             teacher: assignTeacher
         })
 
-        return this.examrespository.save(exam);
+        return this.examRespository.save(exam);
     }
 
     public async updateExam(exam: Partial<Examinations>, teacherId: number, subjectId: number) {
 
-        const updateExam = await this.examrespository.findOne({
+        const updateExam = await this.examRespository.findOne({
             where: {
                 id: exam.id
             }
         })
-        const subject = await this.subjectrepository.findOne({
+        const subject = await this.subjectRepository.findOne({
             where: {
                 id: subjectId
             }
         })
-        const teacher = await this.teacherrepository.findOne({
+        const teacher = await this.teacherRepository.findOne({
             where: {
                 id: teacherId
             }
@@ -71,18 +74,18 @@ export class ExamService {
         if (!updateExam || !subject || !teacher) {
             throw new Error(`Not found`);
         } else {
-            updateExam.exam_name = exam.exam_name
-            updateExam.subject_name = subject.name
-            updateExam.total_marks = exam.total_marks
-            updateExam.max_time = exam.max_time
+            updateExam.examName = exam.examName
+            updateExam.subjectName = subject.name
+            updateExam.totalMarks = exam.totalMarks
+            updateExam.maxTime = exam.maxTime
             updateExam.teacher = teacher
         }
-        return this.examrespository.save(updateExam)
+        return this.examRespository.save(updateExam)
     }
 
     public async getOneExam(examId: number) {
 
-        const exam = this.examrespository.findOne({
+        const exam = this.examRespository.findOne({
             where: {
                 id: examId
             }, relations: ['teacher']
@@ -94,20 +97,33 @@ export class ExamService {
         }
     }
 
-    public async getAllExams() {
+    public async getAllExams(academicYearId: number) {
+        if (academicYearId === undefined) {
+            const exams = await this.examRespository.find({ relations: ['teacher'] })
 
-        const exams = await this.examrespository.find({ relations: ['teacher'] })
-
-        if (exams.length <= 0) {
-            throw new Error('There are no exams')
+            if (exams.length <= 0) {
+                throw new Error('There are no exams')
+            } else {
+                return exams
+            }
         } else {
-            return exams
+            const pastExams = await this.examArchiveRepository.find({
+                where: {
+                    academicYear: academicYearId
+                }, relations: ['teacher']
+            })
+            if (pastExams.length <= 0) {
+                throw new Error("There are no exams in this year");
+            } else {
+                return pastExams
+            }
         }
+
     }
 
     public async deleteExam(examId: number) {
 
-        const exam = await this.examrespository.findOne({
+        const exam = await this.examRespository.findOne({
             where: {
                 id: examId
             }
@@ -116,7 +132,7 @@ export class ExamService {
         if (!exam) {
             throw new Error("Exam not found may be deleted");
         } else {
-            return this.examrespository.delete(exam);
+            return this.examRespository.delete(exam.id);
         }
     }
 }

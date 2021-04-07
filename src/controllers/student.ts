@@ -9,6 +9,7 @@ export default class StudentController {
         const studentService = new StudentService();
 
         try {
+            ctx.checkBody('enrollmentId').notEmpty("please provide Enrollment ID of the student")
             ctx.checkBody('name').len(3, 20, "length of name should be min:3 and max:20 characters");
             ctx.checkBody('gender').match(/m|M|male|Male|f|F|female|Female/, 'gender should be male or female');
             ctx.checkBody('sectionId').notEmpty('section ID cannot be empty').isInt("It should be number")
@@ -81,13 +82,29 @@ export default class StudentController {
         const studentService = new StudentService();
 
         try {
-            const students = await studentService.getAllStudents()
+            const data = ctx.request.body
 
-            if (students.length <= 0) {
-                ctx.body = { message: "There are no students " }
+            ctx.checkBody('data').optional().isInt('It should be a number')
+
+            if (data === undefined) {
+                const students = await studentService.getAllStudents(data)
+
+                if (students.length <= 0) {
+                    ctx.body = { message: "There are no students " }
+                } else {
+                    ctx.body = students;
+                    ctx.response.status = 200;
+                }
             } else {
-                ctx.body = students;
-                ctx.response.status = 200;
+                const students = await studentService.getAllStudents(data.academicYearId)
+
+                if (students.length <= 0) {
+                    ctx.body = { message: "There are no students " }
+                } else {
+                    ctx.body = students;
+                    ctx.response.status = 200;
+                }
+
             }
 
         } catch (error) {

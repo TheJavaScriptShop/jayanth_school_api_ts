@@ -2,24 +2,27 @@ import { getManager, Repository } from 'typeorm'
 import { Result } from '../entities/result'
 import { Student } from '../entities/student'
 import { Examinations } from '../entities/examinations'
+import { ResultArchive } from '../entities/result_archive'
 
 export class ResultService {
 
     resultRepository: Repository<Result>
     studentRepository: Repository<Student>
     examRepository: Repository<Examinations>
+    resultArchiveRepository: Repository<ResultArchive>
 
     constructor() {
         this.resultRepository = getManager().getRepository(Result)
         this.studentRepository = getManager().getRepository(Student)
         this.examRepository = getManager().getRepository(Examinations)
+        this.resultArchiveRepository = getManager().getRepository(ResultArchive)
     }
 
-    public async createResult(studentId: number, examId: number, marks: number) {
+    public async createResult(studentId: string, examId: number, marks: number) {
 
         const student = await this.studentRepository.findOne({
             where: {
-                id: studentId
+                enrollmentId: studentId
             }
         })
         if (!student) {
@@ -35,7 +38,7 @@ export class ResultService {
             } else {
                 const result = await this.resultRepository.create({
                     marks: marks,
-                    student: student,
+                    student: { id: student.id },
                     exam: exam
                 })
 
@@ -104,15 +107,29 @@ export class ResultService {
         }
     }
 
-    public async getResults() {
+    public async getResults(academicYearId: number) {
+        if (academicYearId === undefined) {
+            const results = await this.resultRepository.find({ relations: ['student', 'exam'] })
 
-        const results = await this.resultRepository.find({ relations: ['student', 'exam'] })
-
-        if (results.length <= 0) {
-            throw new Error("No results found");
+            if (results.length <= 0) {
+                throw new Error("No results found");
+            } else {
+                return results
+            }
         } else {
-            return results
+            const pastResults = await this.resultArchiveRepository.find({
+                where: {
+                    academicYear: academicYearId
+                }, relations: ['student', 'exam']
+            })
+
+            if (pastResults.length <= 0) {
+                throw new Error("There are no Results in this year");
+            } else {
+                return pastResults
+            }
         }
+
     }
 
     public async deleteResult(resultId: number) {
@@ -127,7 +144,7 @@ export class ResultService {
             throw new Error("No result found");
 
         } else {
-            return this.resultRepository.delete(result)
+            return this.resultRepository.delete(result.id)
         }
 
     }

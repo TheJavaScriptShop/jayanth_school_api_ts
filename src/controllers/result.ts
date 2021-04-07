@@ -1,7 +1,7 @@
 import { Context } from "koa"
 import { ResultService } from '../services/result'
 
-export default class ResultControllers {
+export default class ResultController {
 
     public static async addResult(ctx: Context) {
 
@@ -11,7 +11,7 @@ export default class ResultControllers {
             const { marks, studentId, examId } = ctx.request.body
 
             ctx.checkBody('marks').notEmpty('marks cannot be empty')
-            ctx.checkBody('studentId').notEmpty('student id cannot be empty').isInt('it should be number')
+            ctx.checkBody('studentId').notEmpty('student id cannot be empty')
             ctx.checkBody('examId').notEmpty('it cannot be empty').isInt('it should be number')
 
             if (ctx.errors) {
@@ -79,9 +79,22 @@ export default class ResultControllers {
         const resultService = new ResultService()
 
         try {
-            const results = await resultService.getResults()
 
-            ctx.body = { message: "Success", results }
+            const data = ctx.request.body
+
+            ctx.checkBody('data').optional().isInt('It should be a number')
+
+            if (data === undefined) {
+
+                const results = await resultService.getResults(data)
+
+                ctx.body = { message: "Success", results }
+            } else {
+                const pastResults = await resultService.getResults(data.academicYearId)
+
+                ctx.body = { message: 'success', pastResults }
+            }
+
         } catch (error) {
             ctx.body = { message: error.message }
         }

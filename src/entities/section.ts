@@ -3,7 +3,7 @@ import { SchoolClass } from "./school_class";
 import { Student } from "../entities/student"
 import { Timestamps } from '../entities/timetamp'
 
-@Entity('section')
+@Entity('Section')
 export class Section extends Timestamps {
 
     @PrimaryGeneratedColumn()

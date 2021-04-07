@@ -2,6 +2,8 @@ import { getManager, Repository } from 'typeorm'
 import { Student } from '../entities/student'
 import { Subject } from '../entities/subject'
 import { Section } from '../entities/section'
+import { StudentArchive } from '../entities/student_archive'
+import { AcademicYear } from '../entities/academicYear'
 
 export enum Gender {
     'male',
@@ -14,11 +16,15 @@ export class StudentService {
     studentRepository: Repository<Student>;
     subjectRepository: Repository<Subject>;
     sectionRepository: Repository<Section>;
+    studentArchiveRepository: Repository<StudentArchive>
+    academicYearRepository: Repository<AcademicYear>
 
     constructor() {
         this.studentRepository = getManager().getRepository(Student)
         this.subjectRepository = getManager().getRepository(Subject)
         this.sectionRepository = getManager().getRepository(Section)
+        this.studentArchiveRepository = getManager().getRepository(StudentArchive)
+        this.academicYearRepository = getManager().getRepository(AcademicYear)
     }
 
     public async createStudent(student: Partial<Student>, sectionId: number) {
@@ -32,6 +38,7 @@ export class StudentService {
             throw new Error("No section Found");
         } else {
             const newStudent = await this.studentRepository.create({
+                enrollmentId: student.enrollmentId,
                 name: student.name,
                 gender: student.gender,
                 section: section
@@ -48,10 +55,10 @@ export class StudentService {
                 id: student.id
             }
         })
-        if(!updatedStudent){
+        if (!updatedStudent) {
             throw new Error("No Student found with this ID");
-        }else{
-            updatedStudent.id = student.id
+        } else {
+            updatedStudent.enrollmentId = student.enrollmentId
             updatedStudent.name = student.name;
             updatedStudent.subject = student.subject;
             updatedStudent.gender = student.gender;
@@ -60,45 +67,61 @@ export class StudentService {
         }
     }
 
-    public async deleteStudent(sId: number) {
+    public async deleteStudent(studentId: number) {
 
         const student = await this.studentRepository.findOne({
             where: {
-                id: sId
+                enrollmentId: studentId
             }
         })
 
         if (!student) {
             throw new Error("There are no Student with this ID");
         } else {
-            this.studentRepository.delete(student.id)
+            return this.studentRepository.delete(student.id)
         }
     }
 
-    public async getAllStudents() {
+    public async getAllStudents(academicYearId: number) {
 
-        const students = await this.studentRepository.find({ relations: ["subject", "section", "section.schoolClass"] });
+        if (academicYearId === undefined) {
 
-        if(students.length<=0){
-            throw new Error("There are no students");
-        }else{
-            return students;
+            const students = await this.studentRepository.find({ relations: ["subject", "section", "section.schoolClass"] });
+
+            if (students.length <= 0) {
+                throw new Error("There are no students");
+            } else {
+                return students;
+            }
+
+        } else {
+
+            const pastStudents = await this.studentArchiveRepository.find({
+                where: {
+                    academicYear: academicYearId
+                }, relations: ["subject", "section", "section.schoolClass"]
+            })
+
+            if (pastStudents.length <= 0) {
+                throw new Error("There are no students in this Year");
+            } else {
+                return pastStudents;
+            }
         }
-
     }
 
-    public async getStudentById(s: Partial<Student>) {
+    public async getStudentById(student: Partial<Student>) {
 
-        const student = await this.studentRepository.findOne({
+        const newStudent = await this.studentRepository.findOne({
             where: {
-                id: s.id
+                id: student.id
             },
-            relations: ["subject"]
+            relations: ["subject", "section", "section.schoolClass"]
         })
-        
-        if(!student){
+
+        if (!student) {
             throw new Error("No student found with this ID");
-        }else{
+        } else {
             return student;
         }
 

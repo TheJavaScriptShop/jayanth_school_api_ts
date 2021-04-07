@@ -1,7 +1,7 @@
 import { SubjectService } from '../services/subject'
 import { Context } from 'koa';
 
-export default class SubjectControllers {
+export default class SubjectController {
 
     public static async createNewSubject(ctx: Context) {
 
@@ -33,13 +33,29 @@ export default class SubjectControllers {
         const subjectService = new SubjectService()
 
         try {
-            const subjects = await subjectService.getSubjects()
+            const data = ctx.request.body
 
-            if (subjects.length <= 0) {
-                ctx.body = { message: "There are no subjects" }
+            ctx.checkBody('data').optional().isInt('It should be a number')
+
+            if (data === undefined) {
+                const subjects = await subjectService.getSubjects(data)
+
+                if (subjects.length <= 0) {
+                    ctx.body = { message: "There are no subjects " }
+                } else {
+                    ctx.body = subjects;
+                    ctx.response.status = 200;
+                }
             } else {
-                ctx.body = subjects
-                ctx.response.status = 200
+                const pastSubjects = await subjectService.getSubjects(data.academicYearId)
+
+                if (pastSubjects.length <= 0) {
+                    ctx.body = { message: "There are no pastSubjects " }
+                } else {
+                    ctx.body = pastSubjects;
+                    ctx.response.status = 200;
+                }
+
             }
 
         } catch (error) {

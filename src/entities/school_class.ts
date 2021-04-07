@@ -2,7 +2,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Section } from "../entities/section";
 import { Timestamps } from '../entities/timetamp'
 
-@Entity('school_class')
+@Entity('School_Class')
 export class SchoolClass extends Timestamps {
 
     @PrimaryGeneratedColumn()

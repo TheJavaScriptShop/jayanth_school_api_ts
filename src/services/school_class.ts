@@ -1,15 +1,18 @@
 import { Repository, getManager } from 'typeorm'
 import { SchoolClass } from '../entities/school_class'
 import { Section } from '../entities/section'
+import { SchoolClassArchive } from '../entities/school_class_archive'
 
 export class ClassService {
 
     classRepository: Repository<SchoolClass>
     sectionRepository: Repository<Section>
+    classArchiveRepository: Repository<SchoolClassArchive>
 
     constructor() {
         this.classRepository = getManager().getRepository(SchoolClass)
         this.sectionRepository = getManager().getRepository(Section)
+        this.classArchiveRepository = getManager().getRepository(SchoolClassArchive)
     }
 
     public async createClass(cls: Partial<SchoolClass>) {
@@ -38,14 +41,28 @@ export class ClassService {
 
     }
 
-    public async getAllClasses() {
+    public async getAllClasses(academicYearId: number) {
 
-        const classes = await this.classRepository.find()
+        if (academicYearId === undefined) {
+            const classes = await this.classRepository.find()
 
-        if (classes.length <= 0) {
-            throw new Error("There are no classes")
+            if (classes.length <= 0) {
+                throw new Error("No classes found");
+            } else {
+                return classes
+            }
         } else {
-            return classes
+            const pastClasses = await this.classArchiveRepository.find({
+                where: {
+                    academicYear: academicYearId
+                }
+            })
+
+            if (pastClasses.length <= 0) {
+                throw new Error("There are no classes in this year");
+            } else {
+                return pastClasses
+            }
         }
 
     }
@@ -78,7 +95,7 @@ export class ClassService {
         if (!deleteClass) {
             throw new Error("No Class Found may be deleted already");
         } else {
-            return this.classRepository.delete(deleteClass)
+            return this.classRepository.delete(deleteClass.id)
         }
 
     }

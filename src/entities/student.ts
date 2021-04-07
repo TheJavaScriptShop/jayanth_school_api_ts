@@ -17,11 +17,14 @@ export class Student extends Timestamps {
     @PrimaryGeneratedColumn()
     id: number
 
+    @Column({ nullable: false, unique: true })
+    enrollmentId: string
+
     @Column()
     name: string
 
     @ManyToMany(() => Subject, (subject) => subject)
-    @JoinTable({ name: 'student_subject' })
+    @JoinTable({ name: 'Student_Subject' })
     subject: Subject[]
 
     @IsEnum(Gender)

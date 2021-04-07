@@ -1,15 +1,15 @@
-import TeacherControllers from '../controllers/teacher'
+import TeacherController from '../controllers/teacher'
 import Router from 'koa-router'
 const teacherRoutes = new Router()
 
-teacherRoutes.post('/teacher/create', TeacherControllers.createTeacher)
+teacherRoutes.post('/teacher/create', TeacherController.createTeacher)
 
-teacherRoutes.get('/teacher/getone', TeacherControllers.getSingleTeacher)
+teacherRoutes.get('/teacher/getone', TeacherController.getSingleTeacher)
 
-teacherRoutes.get('/teacher/getall', TeacherControllers.getAllTeachers)
+teacherRoutes.get('/teacher/getall', TeacherController.getAllTeachers)
 
-teacherRoutes.put('/teacher/update', TeacherControllers.updateTeacher)
+teacherRoutes.put('/teacher/update', TeacherController.updateTeacher)
 
-teacherRoutes.delete('/teacher/delete', TeacherControllers.deleteTeacher)
+teacherRoutes.delete('/teacher/delete', TeacherController.deleteTeacher)
 
 export { teacherRoutes }

@@ -2,23 +2,23 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Teacher } from '../entities/teacher'
 import { Timestamps } from '../entities/timetamp'
 
-@Entity('examinations')
+@Entity('Examinations')
 export class Examinations extends Timestamps {
 
     @PrimaryGeneratedColumn()
     id: number
 
     @Column()
-    exam_name: string
+    examName: string
 
     @Column()
-    subject_name: string
+    subjectName: string
 
     @Column()
-    total_marks: number
+    totalMarks: number
 
     @Column({ nullable: true })
-    max_time: number
+    maxTime: number
 
     @ManyToOne(() => Teacher, (teacher) => teacher.examinations, { onDelete: "SET NULL", onUpdate: "CASCADE", nullable: true })
     teacher: Teacher
