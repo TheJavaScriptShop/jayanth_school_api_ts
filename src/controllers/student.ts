@@ -141,4 +141,30 @@ export default class StudentController {
         }
     }
 
+    public static async uploadStudents(ctx: Context) {
+
+        const studentService = new StudentService()
+
+        try {
+            const { filename } = ctx.request.body
+
+            ctx.checkBody('filename').notEmpty('Please provide file')
+
+            if (ctx.errors) {
+
+                ctx.body = ctx.errors;
+                ctx.response.status = 404;
+
+            } else {
+                studentService.uploadStudents(filename.name)
+
+                ctx.body = { message: "uploaded successfully" }
+            }
+
+        } catch (error) {
+            ctx.body = { message: error.message }
+        }
+
+    }
+
 }

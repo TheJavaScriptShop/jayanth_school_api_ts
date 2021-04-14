@@ -12,4 +12,6 @@ studentRouter.get('/student/getall', StudentController.getStudents);
 
 studentRouter.get('/student/getone', StudentController.getOneStudent);
 
+studentRouter.post('/student/upload', StudentController.uploadStudents);
+
 export { studentRouter }

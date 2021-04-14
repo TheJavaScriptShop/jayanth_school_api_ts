@@ -1,6 +1,8 @@
 import { getManager, Repository } from 'typeorm'
 import { Teacher } from '../entities/teacher'
 import { TeacherArchive } from "../entities/teacher_archive"
+import csvParser from 'csv-parser'
+import * as fs from 'fs'
 
 export class TeacherService {
 
@@ -92,5 +94,18 @@ export class TeacherService {
         } else {
             return this.teacherRepository.delete(deleteTeacher.id)
         }
+    }
+
+    public async uploadTeachers(filename: string) {
+        const teachers = [];
+
+        console.log(filename)
+        fs.createReadStream(`./src/uploads/${filename}`)
+            .pipe(csvParser({}))
+            .on('data', (data) => teachers.push(data))
+            .on('end', () => {
+                this.teacherRepository.save(teachers)
+                console.log('done')
+            })
     }
 }

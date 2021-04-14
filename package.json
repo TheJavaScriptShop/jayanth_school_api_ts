@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "class-validator": "^0.13.1",
+    "csv-parser": "^3.0.0",
     "koa": "^2.13.1",
     "koa-body": "^4.2.0",
     "koa-compose": "^4.1.0",

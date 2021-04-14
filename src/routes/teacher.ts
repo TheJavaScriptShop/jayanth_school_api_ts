@@ -12,4 +12,6 @@ teacherRoutes.put('/teacher/update', TeacherController.updateTeacher)
 
 teacherRoutes.delete('/teacher/delete', TeacherController.deleteTeacher)
 
+teacherRoutes.post('/teacher/upload', TeacherController.uploadTeachers);
+
 export { teacherRoutes }
