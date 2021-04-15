@@ -3,7 +3,9 @@ import { Student } from '../entities/student'
 import { Subject } from '../entities/subject'
 import { Section } from '../entities/section'
 import { StudentArchive } from '../entities/student_archive'
-import { AcademicYear } from '../entities/academicYear'
+import { AcademicYear } from '../entities/academicYear';
+import csvParser from 'csv-parser'
+import * as fs from 'fs'
 
 export enum Gender {
     'male',
@@ -125,5 +127,18 @@ export class StudentService {
             return student;
         }
 
+    }
+
+    public async uploadStudents(filename: string) {
+        const students = [];
+
+        console.log(filename)
+        fs.createReadStream(`./src/uploads/${filename}`)
+            .pipe(csvParser({}))
+            .on('data', (data) => students.push(data))
+            .on('end', () => {
+                this.studentRepository.save(students)
+                console.log('done')
+            })
     }
 }

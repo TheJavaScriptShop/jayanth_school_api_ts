@@ -139,4 +139,30 @@ export default class TeacherController {
             ctx.body = { message: error.message }
         }
     }
+
+    public static async uploadTeachers(ctx: Context) {
+
+        const teacherService = new TeacherService()
+
+        try {
+            const { filename } = ctx.request.body
+
+            ctx.checkBody('filename').notEmpty('Please provide file')
+
+            if (ctx.errors) {
+
+                ctx.body = ctx.errors;
+                ctx.response.status = 404;
+
+            } else {
+                teacherService.uploadTeachers(filename.name)
+
+                ctx.body = { message: "uploaded successfully" }
+            }
+
+        } catch (error) {
+            ctx.body = { message: error.message }
+        }
+
+    }
 }
