@@ -23,7 +23,7 @@ export class TeacherService {
         // })
 
         const newTeacher = await this.teacherRepository.query('insert into public."Teacher"(name, gender) values($1, $2) returning *', [teacher.name, teacher.gender])
-        
+
         return newTeacher
 
         // return this.teacherRepository.save(newTeacher)
@@ -50,13 +50,32 @@ export class TeacherService {
         if (academicYearId === undefined) {
 
             // const teachers = await this.teacherRepository.find({ relations: ['subject'] });
+            // const teacherList = []
 
-            const teachers = await this.teacherRepository.query('select Teacher.id, Teacher.name, Teacher.gender, subject from public."Teacher" as Teacher left join public."Subject" as Subject on Teacher."id" = Subject."teacherId"')
+            const teachers = await this.teacherRepository.query('SELECT  "Teacher"."id" AS "Teacher_id", "Teacher"."name" AS "Teacher_name", "Teacher"."gender" AS "Teacher_gender", "Teacher__subject"."id" AS "Teacher__subject_id", "Teacher__subject"."name" AS "Teacher__subject_name" FROM "Teacher" "Teacher" LEFT JOIN "Subject" "Teacher__subject" ON "Teacher__subject"."teacherId"="Teacher"."id"')
+
+            // console.log(teachers)
+
+            // for (let teacher in teachers) {
+            //     console.log(teachers[teacher])
+            // }
+
+            const changedTeachers = teachers.map(teacher => ({
+                id: teacher.Teacher_id,
+                name: teacher.Teacher_name,
+                gender: teacher.Teacher_gender,
+                subject: {
+                    name: teacher.Teacher__subject_name,
+                    id: teacher.Teacher__subject_id
+                }
+            }))
+
+            // console.log(changedTeachers)
 
             if (teachers.length <= 0) {
                 throw new Error("There are no teachers");
             } else {
-                return teachers;
+                return changedTeachers;
             }
 
         } else {
@@ -67,12 +86,23 @@ export class TeacherService {
             //     }, relations: ['subject']
             // })
 
-            const pastTeachers = await this.teacherArchiveRepository.query('select Teacher_Archive.id, Teacher_Archive.name, Teacher_Archive.gender, subject_archive from public."Teacher_Archive" as Teacher_Archive left join public."Subject_Archive" as Subject_Archive on Teacher_Archive."id" = Subject_Archive."teacherId"')
+            const pastTeachers = await this.teacherArchiveRepository.query('SELECT  "Teacher_Archive"."id" AS "Teacher_Archive_id", "Teacher_Archive"."name" AS "Teacher_Archive_name", "Teacher_Archive"."gender" AS "Teacher_Archive_gender", "Teacher_Archive__subject"."id" AS "Teacher_Archive__subject_id", "Teacher_Archive__subject"."name" AS "Teacher_Archive__subject_name" FROM "Teacher_Archive" "Teacher_Archive" LEFT JOIN "Subject_Archive" "Teacher_Archive__subject" ON "Teacher_Archive__subject"."teacherId"="Teacher_Archive"."id"')
+
+            // console.log(pastTeachers)
+            const changedTeachers = pastTeachers.map(teacher => ({
+                id: teacher.Teacher_Archive_id,
+                name: teacher.Teacher_Archive_name,
+                gender: teacher.Teacher_Archive_gender,
+                subject: {
+                    name: teacher.Teacher_Archive__subject_name,
+                    id: teacher.Teacher_Archive__subject_id
+                }
+            }))
 
             if (pastTeachers.length <= 0) {
                 throw new Error("There are no teachers in this Year");
             } else {
-                return pastTeachers;
+                return changedTeachers;
             }
         }
     }
@@ -88,7 +118,7 @@ export class TeacherService {
         // console.log(teacher)
 
         const updateTeacher = await this.teacherRepository.query('update public."Teacher" set name = $1 , gender = $2 where public."Teacher".id= $3 returning *', [teacher.name, teacher.gender, teacher.id])
-        
+
         return updateTeacher
 
         // console.log(updateTeacher)

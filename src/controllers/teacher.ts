@@ -89,7 +89,7 @@ export default class TeacherController {
             }
 
         } catch (error) {
-            ctx.body = { message: error.message }
+            console.log(error)
         }
     }
 
