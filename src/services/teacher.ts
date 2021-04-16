@@ -22,7 +22,8 @@ export class TeacherService {
         //     gender: teacher.gender,
         // })
 
-        const newTeacher = await this.teacherRepository.query('insert into public."Teacher"(name, gender) values($1, $2) returning *',[ teacher.name, teacher.gender])
+        const newTeacher = await this.teacherRepository.query('insert into public."Teacher"(name, gender) values($1, $2) returning *', [teacher.name, teacher.gender])
+        
         return newTeacher
 
         // return this.teacherRepository.save(newTeacher)
@@ -39,8 +40,8 @@ export class TeacherService {
 
         // })
 
-        const teacher = await this.teacherRepository.query('select Teacher.id, Teacher.name, Teacher.gender, subject from public."Teacher" as Teacher left join public."Subject" as Subject on Teacher."id" = Subject."teacherId" where Teacher.id=$1', [ teacherId ])
-        console.log(teacher)
+        const teacher = await this.teacherRepository.query('select Teacher.id, Teacher.name, Teacher.gender, subject from public."Teacher" as Teacher left join public."Subject" as Subject on Teacher."id" = Subject."teacherId" where Teacher.id=$1', [teacherId])
+        // console.log(teacher)
         return teacher;
     }
 
@@ -66,7 +67,7 @@ export class TeacherService {
             //     }, relations: ['subject']
             // })
 
-            const pastTeachers = await this.teacherArchiveRepository.query('select Teacher_Archive.id, Teacher_Archive.name, Teacher_Archive.gender, subject from public."Teacher_Archive" as Teacher left join public."Subject_Archive" as Subject_Archive on Teacher_Archive."id" = Subject_Archive."teacherId"')
+            const pastTeachers = await this.teacherArchiveRepository.query('select Teacher_Archive.id, Teacher_Archive.name, Teacher_Archive.gender, subject_archive from public."Teacher_Archive" as Teacher_Archive left join public."Subject_Archive" as Subject_Archive on Teacher_Archive."id" = Subject_Archive."teacherId"')
 
             if (pastTeachers.length <= 0) {
                 throw new Error("There are no teachers in this Year");
@@ -78,16 +79,24 @@ export class TeacherService {
 
     public async updateTeacher(teacher: Partial<Teacher>) {
 
-        const updateTeacher = await this.teacherRepository.findOne({
-            where: {
-                id: teacher.id
-            }
-        })
+        // const updateTeacher = await this.teacherRepository.findOne({
+        //     where: {
+        //         id: teacher.id
+        //     }
+        // })
 
-        updateTeacher.name = teacher.name;
-        updateTeacher.gender = teacher.gender;
+        // console.log(teacher)
 
-        return this.teacherRepository.save(updateTeacher);
+        const updateTeacher = await this.teacherRepository.query('update public."Teacher" set name = $1 , gender = $2 where public."Teacher".id= $3 returning *', [teacher.name, teacher.gender, teacher.id])
+        
+        return updateTeacher
+
+        // console.log(updateTeacher)
+
+        // updateTeacher.name = teacher.name;
+        // updateTeacher.gender = teacher.gender;
+
+        // return this.teacherRepository.save(updateTeacher);
     }
 
     public async deleteTeacher(teacherId: number) {
@@ -98,13 +107,13 @@ export class TeacherService {
         //     }
         // })
 
-        const deleteTeacher = await this.teacherRepository.query(`SELECT id FROM public."Teacher" where id = $1`, [ teacherId ])
-        console.log(deleteTeacher)
+        const deleteTeacher = await this.teacherRepository.query(`SELECT id FROM public."Teacher" where id = $1`, [teacherId])
+        // console.log(deleteTeacher)
 
         if (!deleteTeacher) {
             throw new Error("There is no Teacher with this ID");
         } else {
-            return this.teacherRepository.query('delete from public."Teacher" where id = $1',[ teacherId ])
+            return this.teacherRepository.query('delete from public."Teacher" where id = $1', [teacherId])
         }
     }
 
