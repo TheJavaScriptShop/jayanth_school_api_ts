@@ -34,34 +34,13 @@ export class TeacherService {
         if (academicYearId === undefined) {
 
             const teachers = await this.teacherRepository.query('SELECT  "Teacher"."id" AS "Teacher_id", "Teacher"."name" AS "Teacher_name", "Teacher"."gender" AS "Teacher_gender", "Teacher__subject"."id" AS "Teacher__subject_id", "Teacher__subject"."name" AS "Teacher__subject_name" FROM "Teacher" "Teacher" LEFT JOIN "Subject" "Teacher__subject" ON "Teacher__subject"."teacherId"="Teacher"."id"')
-            
+
             if (teachers.length <= 0) {
                 throw new Error("There are no teachers");
             } else {
-                let changedTeachers = [];
-                let checkedTeachers = [];
-                teachers.forEach((teacher) => {
-                    if (checkedTeachers.includes(teacher.Teacher_id)) {
-                        const teacherIndex = checkedTeachers.findIndex(() => teacher.Teacher_id);
-                        changedTeachers[teacherIndex].subjects.push({
-                            name: teacher.Teacher__subject_name,
-                            id: teacher.Teacher__subject_id
-                        })
-                    } else {
-                        changedTeachers.push({
-                            id: teacher.Teacher_id,
-                            name: teacher.Teacher_name,
-                            gender: teacher.Teacher_gender,
-                            subjects: [{
-                                name: teacher.Teacher__subject_name,
-                                id: teacher.Teacher__subject_id
-                            }]
-                        })
-                        checkedTeachers.push(teacher.Teacher_id);
-                    }
-                });
-                
-                return changedTeachers
+                const attributes = ['Teacher_id', 'Teacher_name', 'Teacher_gender', 'Teacher__subject_name', 'Teacher__subject_id']
+
+                return this.creatingTeacherObject(teachers, attributes)
             }
 
         } else {
@@ -70,30 +49,10 @@ export class TeacherService {
             if (pastTeachers.length <= 0) {
                 throw new Error("There are no teachers in this Year");
             } else {
-                let changedTeachers = [];
-                let checkedTeachers = [];
-                pastTeachers.forEach((teacher) => {
-                    if (checkedTeachers.includes(teacher.Teacher_id)) {
-                        const teacherIndex = checkedTeachers.findIndex(() => teacher.Teacher_Archive_id);
-                        changedTeachers[teacherIndex].subjects.push({
-                            name: teacher.Teacher_Archive__subject_name,
-                            id: teacher.Teacher_Archive__subject_id
-                        })
-                    } else {
-                        changedTeachers.push({
-                            id: teacher.Teacher_Archive_id,
-                            name: teacher.Teacher_Archive_name,
-                            gender: teacher.Teacher_Archive_gender,
-                            subjects: [{
-                                name: teacher.Teacher_Archive__subject_name,
-                                id: teacher.Teacher_Archive__subject_id
-                            }]
-                        })
-                        checkedTeachers.push(teacher.Teacher_id);
-                    }
-                });
-                
-                return changedTeachers
+
+                const attributes = ['Teacher_Archive_id', 'Teacher_Archive_name', 'Teacher_Archive_gender', 'Teacher_Archive__subject_name', 'Teacher_Archive__subejct_id']
+
+                return this.creatingTeacherObject(pastTeachers, attributes)
             }
         }
     }
@@ -127,5 +86,34 @@ export class TeacherService {
                 this.teacherRepository.save(teachers)
                 console.log('done')
             })
+    }
+
+    public async creatingTeacherObject(arr, attributes) {
+
+        let changedTeachers = [];
+        let checkedTeachers = [];
+        arr.forEach((teacher) => {
+            if (checkedTeachers.includes(teacher[attributes[0]])) {
+                const teacherIndex = checkedTeachers.findIndex(() => teacher[attributes[0]]);
+                changedTeachers[teacherIndex].subjects.push({
+                    name: teacher[attributes[3]],
+                    id: teacher[attributes[4]]
+                })
+            } else {
+                changedTeachers.push({
+                    id: teacher[attributes[0]],
+                    name: teacher[attributes[1]],
+                    gender: teacher[attributes[2]],
+                    subjects: [{
+                        name: teacher[attributes[3]],
+                        id: teacher[attributes[4]]
+                    }]
+                })
+                checkedTeachers.push(teacher[attributes[0]]);
+            }
+        });
+
+        return changedTeachers
+
     }
 }
