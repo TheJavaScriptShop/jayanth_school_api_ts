@@ -34,40 +34,66 @@ export class TeacherService {
         if (academicYearId === undefined) {
 
             const teachers = await this.teacherRepository.query('SELECT  "Teacher"."id" AS "Teacher_id", "Teacher"."name" AS "Teacher_name", "Teacher"."gender" AS "Teacher_gender", "Teacher__subject"."id" AS "Teacher__subject_id", "Teacher__subject"."name" AS "Teacher__subject_name" FROM "Teacher" "Teacher" LEFT JOIN "Subject" "Teacher__subject" ON "Teacher__subject"."teacherId"="Teacher"."id"')
-
-            const changedTeachers = teachers.map(teacher => ({
-                id: teacher.Teacher_id,
-                name: teacher.Teacher_name,
-                gender: teacher.Teacher_gender,
-                subject: {
-                    name: teacher.Teacher__subject_name,
-                    id: teacher.Teacher__subject_id
-                }
-            }))
-
+            
             if (teachers.length <= 0) {
                 throw new Error("There are no teachers");
             } else {
-                return changedTeachers;
+                let changedTeachers = [];
+                let checkedTeachers = [];
+                teachers.forEach((teacher) => {
+                    if (checkedTeachers.includes(teacher.Teacher_id)) {
+                        const teacherIndex = checkedTeachers.findIndex(() => teacher.Teacher_id);
+                        changedTeachers[teacherIndex].subjects.push({
+                            name: teacher.Teacher__subject_name,
+                            id: teacher.Teacher__subject_id
+                        })
+                    } else {
+                        changedTeachers.push({
+                            id: teacher.Teacher_id,
+                            name: teacher.Teacher_name,
+                            gender: teacher.Teacher_gender,
+                            subjects: [{
+                                name: teacher.Teacher__subject_name,
+                                id: teacher.Teacher__subject_id
+                            }]
+                        })
+                        checkedTeachers.push(teacher.Teacher_id);
+                    }
+                });
+                
+                return changedTeachers
             }
 
         } else {
             const pastTeachers = await this.teacherArchiveRepository.query('SELECT  "Teacher_Archive"."id" AS "Teacher_Archive_id", "Teacher_Archive"."name" AS "Teacher_Archive_name", "Teacher_Archive"."gender" AS "Teacher_Archive_gender", "Teacher_Archive__subject"."id" AS "Teacher_Archive__subject_id", "Teacher_Archive__subject"."name" AS "Teacher_Archive__subject_name" FROM "Teacher_Archive" "Teacher_Archive" LEFT JOIN "Subject_Archive" "Teacher_Archive__subject" ON "Teacher_Archive__subject"."teacherId"="Teacher_Archive"."id"')
 
-            const changedTeachers = pastTeachers.map(teacher => ({
-                id: teacher.Teacher_Archive_id,
-                name: teacher.Teacher_Archive_name,
-                gender: teacher.Teacher_Archive_gender,
-                subject: {
-                    name: teacher.Teacher_Archive__subject_name,
-                    id: teacher.Teacher_Archive__subject_id
-                }
-            }))
-
             if (pastTeachers.length <= 0) {
                 throw new Error("There are no teachers in this Year");
             } else {
-                return changedTeachers;
+                let changedTeachers = [];
+                let checkedTeachers = [];
+                pastTeachers.forEach((teacher) => {
+                    if (checkedTeachers.includes(teacher.Teacher_id)) {
+                        const teacherIndex = checkedTeachers.findIndex(() => teacher.Teacher_Archive_id);
+                        changedTeachers[teacherIndex].subjects.push({
+                            name: teacher.Teacher_Archive__subject_name,
+                            id: teacher.Teacher_Archive__subject_id
+                        })
+                    } else {
+                        changedTeachers.push({
+                            id: teacher.Teacher_Archive_id,
+                            name: teacher.Teacher_Archive_name,
+                            gender: teacher.Teacher_Archive_gender,
+                            subjects: [{
+                                name: teacher.Teacher_Archive__subject_name,
+                                id: teacher.Teacher_Archive__subject_id
+                            }]
+                        })
+                        checkedTeachers.push(teacher.Teacher_id);
+                    }
+                });
+                
+                return changedTeachers
             }
         }
     }
