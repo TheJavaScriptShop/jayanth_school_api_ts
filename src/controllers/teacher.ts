@@ -89,7 +89,7 @@ export default class TeacherController {
             }
 
         } catch (error) {
-            ctx.body = { message: error.message }
+            ctx.body = { message: error.message}
         }
     }
 
@@ -97,7 +97,7 @@ export default class TeacherController {
         const teacherService = new TeacherService()
         try {
 
-            const { id, name, gender, subject } = ctx.request.body;
+            const { id, name, gender } = ctx.request.body;
 
             ctx.checkBody('id').optional().notEmpty('teacher Id cannot be empty').isInt('subject id should be integer or number')
             ctx.checkBody('name').optional().len(3, 20, 'teacher name should be min of 3 characters and max of 20 characters ')
@@ -107,7 +107,7 @@ export default class TeacherController {
                 ctx.body = ctx.errors
                 ctx.response.status = 400
             } else {
-                const updatedTeacher = await teacherService.updateTeacher({ id, name, gender, subject })
+                const updatedTeacher = await teacherService.updateTeacher({ id, name, gender })
                 ctx.body = updatedTeacher
                 ctx.response.status = 200
             }
