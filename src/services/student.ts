@@ -1,4 +1,4 @@
-import { getManager, Repository } from 'typeorm'
+import { getManager, Repository, EntityManager } from 'typeorm'
 import { Student } from '../entities/student'
 import { Subject } from '../entities/subject'
 import { Section } from '../entities/section'
@@ -31,56 +31,71 @@ export class StudentService {
 
     public async createStudent(student: Partial<Student>, sectionId: number) {
 
-        const section = await this.sectionRepository.findOne({
-            where: {
-                id: sectionId
-            }
-        })
+        // const section = await this.sectionRepository.findOne({
+        //     where: {
+        //         id: sectionId
+        //     }
+        // })
+
+        const section = await this.sectionRepository.manager.findOne(Section, { id: sectionId })
+
         if (!section) {
             throw new Error("No section Found");
         } else {
-            const newStudent = await this.studentRepository.create({
+            const newStudent = await this.studentRepository.manager.create(Student, {
                 enrollmentId: student.enrollmentId,
                 name: student.name,
                 gender: student.gender,
                 section: section
             })
 
-            return this.studentRepository.save(newStudent);
+            return this.studentRepository.manager.save(newStudent);
         }
     }
 
     public async updateStudent(student: Partial<Student>) {
 
-        const updatedStudent = await this.studentRepository.findOne({
-            where: {
-                id: student.id
-            }
-        })
+        // const updatedStudent = await this.studentRepository.findOne({
+        //     where: {
+        //         id: student.id
+        //     }
+        // })
+
+        const updatedStudent = await this.studentRepository.manager.findOne(Student, { id: student.id })
+
         if (!updatedStudent) {
             throw new Error("No Student found with this ID");
         } else {
-            updatedStudent.enrollmentId = student.enrollmentId
-            updatedStudent.name = student.name;
-            updatedStudent.subject = student.subject;
-            updatedStudent.gender = student.gender;
+            // updatedStudent.enrollmentId = student.enrollmentId
+            // updatedStudent.name = student.name;
+            // updatedStudent.subject = student.subject;
+            // updatedStudent.gender = student.gender;
 
-            return this.studentRepository.save(updatedStudent)
+            await this.studentRepository.manager.update(Student, student.id, {
+                enrollmentId: student.enrollmentId,
+                name: student.name,
+                subject: student.subject,
+                gender: student.gender
+            })
+
+            return this.studentRepository.manager.save(updatedStudent)
         }
     }
 
     public async deleteStudent(studentId: number) {
 
-        const student = await this.studentRepository.findOne({
-            where: {
-                enrollmentId: studentId
-            }
-        })
+        // const student = await this.studentRepository.findOne({
+        //     where: {
+        //         enrollmentId: studentId
+        //     }
+        // })
+
+        const student = await this.studentRepository.manager.findOne(Student, { id: studentId })
 
         if (!student) {
             throw new Error("There are no Student with this ID");
         } else {
-            return this.studentRepository.delete(student.id)
+            return this.studentRepository.manager.delete(Student, { studentId })
         }
     }
 
@@ -88,7 +103,11 @@ export class StudentService {
 
         if (academicYearId === undefined) {
 
-            const students = await this.studentRepository.find({ relations: ["subject", "section", "section.schoolClass"] });
+            // const students = await this.studentRepository.find({ relations: ["subject", "section", "section.schoolClass"] });
+
+            const students = await this.studentRepository.manager.find(Student, {
+                relations: ["subject", "section", "section.schoolClass"]
+            })
 
             if (students.length <= 0) {
                 throw new Error("There are no students");
@@ -98,10 +117,15 @@ export class StudentService {
 
         } else {
 
-            const pastStudents = await this.studentArchiveRepository.find({
-                where: {
-                    academicYear: academicYearId
-                }, relations: ["subject", "section", "section.schoolClass"]
+            // const pastStudents = await this.studentArchiveRepository.find({
+            //     where: {
+            //         academicYear: academicYearId
+            //     }, relations: ["subject", "section", "section.schoolClass"]
+            // })
+
+            const pastStudents = await this.studentArchiveRepository.manager.find(StudentArchive, {
+                where: { id: academicYearId },
+                relations: ["subject", "section", "section.schoolClass"]
             })
 
             if (pastStudents.length <= 0) {
@@ -114,17 +138,22 @@ export class StudentService {
 
     public async getStudentById(student: Partial<Student>) {
 
-        const newStudent = await this.studentRepository.findOne({
-            where: {
-                id: student.id
-            },
+        // const newStudent = await this.studentRepository.findOne({
+        //     where: {
+        //         id: student.id
+        //     },
+        //     relations: ["subject", "section", "section.schoolClass"]
+        // })
+
+        const newStudent = await this.studentRepository.manager.findOne(Student, {
+            where: { enrollmentId: student.enrollmentId },
             relations: ["subject", "section", "section.schoolClass"]
         })
 
-        if (!student) {
+        if (!newStudent) {
             throw new Error("No student found with this ID");
         } else {
-            return student;
+            return newStudent;
         }
 
     }

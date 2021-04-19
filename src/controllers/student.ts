@@ -117,14 +117,14 @@ export default class StudentController {
         const studentService = new StudentService();
 
         try {
-            const id = ctx.request.body
-            ctx.checkBody('id').notEmpty('id cannot be empty').isInt('id should be int or number')
+            const enrollmentId = ctx.request.body
+            ctx.checkBody('enrollmentId').notEmpty('id cannot be empty').isInt('id should be int or number')
 
             if (ctx.errors) {
                 ctx.body = ctx.errors
                 ctx.response.status = 400
             } else {
-                const student = await studentService.getStudentById(id);
+                const student = await studentService.getStudentById(enrollmentId);
 
                 if (!student) {
                     ctx.body = { message: " There is no student with this id " }
