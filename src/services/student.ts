@@ -1,4 +1,4 @@
-import { getManager, Repository } from 'typeorm'
+import { getManager, Repository, EntityManager } from 'typeorm'
 import { Student } from '../entities/student'
 import { Subject } from '../entities/subject'
 import { Section } from '../entities/section'
@@ -31,56 +31,116 @@ export class StudentService {
 
     public async createStudent(student: Partial<Student>, sectionId: number) {
 
-        const section = await this.sectionRepository.findOne({
-            where: {
-                id: sectionId
-            }
-        })
+        // const section = await this.sectionRepository.findOne({
+        //     where: {
+        //         id: sectionId
+        //     }
+        // })
+
+        const section = await this.sectionRepository.manager.createQueryBuilder()
+        .select("section")
+        .from(Section , 'section')
+        .where('section.id = :id', {id: sectionId})
+        .getOne()
+
+
         if (!section) {
             throw new Error("No section Found");
         } else {
-            const newStudent = await this.studentRepository.create({
-                enrollmentId: student.enrollmentId,
-                name: student.name,
-                gender: student.gender,
-                section: section
-            })
 
-            return this.studentRepository.save(newStudent);
+            const newStudent = await this.studentRepository.manager.createQueryBuilder()
+            .insert()
+            .into(Student)
+            .values([
+                {
+                    enrollmentId: student.enrollmentId,
+                    name: student.name,
+                    gender: student.gender,
+                    section: section  
+                }
+            ])
+            .output('*')
+            .execute()
+            
+            return newStudent.generatedMaps
+
+            // const newStudent = await this.studentRepository.manager.create(Student, {
+            //     enrollmentId: student.enrollmentId,
+            //     name: student.name,
+            //     gender: student.gender,
+            //     section: section
+            // })
+
+            // return this.studentRepository.manager.save(newStudent);
         }
     }
 
-    public async updateStudent(student: Partial<Student>) {
+    public async updateStudent(student: Partial<Student>, sectionId: number) {
 
-        const updatedStudent = await this.studentRepository.findOne({
-            where: {
-                id: student.id
-            }
-        })
+        // const updatedStudent = await this.studentRepository.findOne({
+        //     where: {
+        //         id: student.id
+        //     }
+        // })
+
+        const updatedStudent = await this.studentRepository.manager.findOne(Student, { enrollmentId: student.enrollmentId })
+
         if (!updatedStudent) {
             throw new Error("No Student found with this ID");
         } else {
-            updatedStudent.enrollmentId = student.enrollmentId
-            updatedStudent.name = student.name;
-            updatedStudent.subject = student.subject;
-            updatedStudent.gender = student.gender;
+            // updatedStudent.enrollmentId = student.enrollmentId
+            // updatedStudent.name = student.name;
+            // updatedStudent.subject = student.subject;
+            // updatedStudent.gender = student.gender;
 
-            return this.studentRepository.save(updatedStudent)
+            const section = await this.sectionRepository.manager.createQueryBuilder()
+            .select("section")
+            .from(Section , 'section')
+            .where('section.id = :id', {id: sectionId})
+            .getOne()
+
+            if(!sectionId){
+                throw new Error("No section found with this Id");
+            }else{
+                const newUpdatedStudent = await this.studentRepository.manager.createQueryBuilder()
+                .update(Student)
+                .set({
+                    enrollmentId: student.enrollmentId,
+                    name: student.name,
+                    gender: student.gender,
+                    section: section
+                })
+                .where('enrollmentId= :enrollmentId', { enrollmentId: student.enrollmentId })
+                .output('*')
+                .execute()
+
+                return newUpdatedStudent.raw
+            }
         }
     }
 
-    public async deleteStudent(studentId: number) {
+    public async deleteStudent(enrollmentId: number) {
 
-        const student = await this.studentRepository.findOne({
-            where: {
-                enrollmentId: studentId
-            }
-        })
+        // const student = await this.studentRepository.findOne({
+        //     where: {
+        //         enrollmentId: studentId
+        //     }
+        // })
+
+        const student = await this.studentRepository.manager.createQueryBuilder()
+        .select('student')
+        .from(Student, 'student')
+        .where('student.enrollmentId= :enrollmentId', { enrollmentId: enrollmentId })
+        .getOne()
 
         if (!student) {
             throw new Error("There are no Student with this ID");
         } else {
-            return this.studentRepository.delete(student.id)
+            await this.studentRepository.manager.createQueryBuilder()
+            .delete()
+            .from(Student)
+            .where('enrollmentId = :enrollmentId', { enrollmentId: enrollmentId })
+            .execute()
         }
     }
 
@@ -88,7 +148,18 @@ export class StudentService {
 
         if (academicYearId === undefined) {
 
-            const students = await this.studentRepository.find({ relations: ["subject", "section", "section.schoolClass"] });
+            // const students = await this.studentRepository.find({ relations: ["subject", "section", "section.schoolClass"] });
+
+            // const students = await this.studentRepository.manager.find(Student, {
+            //     relations: ["subject", "section", "section.schoolClass"]
+            // })
+
+            const students = await this.studentRepository.manager.createQueryBuilder()
+            .select('student')
+            .from(Student,'student')
+            .leftJoinAndSelect('student.section','section')
+            .leftJoinAndSelect('section.schoolClass','schoolClass')
+            .getMany()
 
             if (students.length <= 0) {
                 throw new Error("There are no students");
@@ -98,11 +169,24 @@ export class StudentService {
 
         } else {
 
-            const pastStudents = await this.studentArchiveRepository.find({
-                where: {
-                    academicYear: academicYearId
-                }, relations: ["subject", "section", "section.schoolClass"]
-            })
+            // const pastStudents = await this.studentArchiveRepository.find({
+            //     where: {
+            //         academicYear: academicYearId
+            //     }, relations: ["subject", "section", "section.schoolClass"]
+            // })
+
+            // const pastStudents = await this.studentArchiveRepository.manager.find(StudentArchive, {
+            //     where: { id: academicYearId },
+            //     relations: ["subject", "section", "section.schoolClass"]
+            // })
+
+            const pastStudents = await this.studentRepository.manager.createQueryBuilder()
+            .select('studentArchive')
+            .from(StudentArchive,'studentArchive')
+            .where('studentArchive.academicYearId= :academicYearId', { academicYearId: academicYearId })
+            .leftJoinAndSelect('studentArchive.section','section')
+            .leftJoinAndSelect('section.schoolClass','schoolClass')
+            .getMany()
 
             if (pastStudents.length <= 0) {
                 throw new Error("There are no students in this Year");
@@ -114,17 +198,31 @@ export class StudentService {
 
     public async getStudentById(student: Partial<Student>) {
 
-        const newStudent = await this.studentRepository.findOne({
-            where: {
-                id: student.id
-            },
-            relations: ["subject", "section", "section.schoolClass"]
-        })
+        // const newStudent = await this.studentRepository.findOne({
+        //     where: {
+        //         id: student.id
+        //     },
+        //     relations: ["subject", "section", "section.schoolClass"]
+        // })
 
-        if (!student) {
+        // const newStudent = await this.studentRepository.manager.findOne(Student, {
+        //     where: { enrollmentId: student.enrollmentId },
+        //     relations: ["subject", "section", "section.schoolClass"]
+        // })
+
+        const newStudent = await this.studentRepository.manager
+        .createQueryBuilder()
+        .select('student')
+        .from(Student, 'student')
+        .where('student.enrollmentId = :enrollmentId',{ enrollmentId: student.enrollmentId })
+        .leftJoinAndSelect('student.section','section')
+        .leftJoinAndSelect('section.schoolClass','schoolClass')
+        .getOne()
+
+        if (!newStudent) {
             throw new Error("No student found with this ID");
         } else {
-            return student;
+            return newStudent;
         }
 
     }
